@@ -1,0 +1,797 @@
+{
+  "prompt": {
+    "1": {
+      "class_type": "UNETLoader",
+      "inputs": {
+        "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      },
+      "_meta": {
+        "title": "MiniMax H3 FL2VA INT8"
+      }
+    },
+    "2": {
+      "class_type": "MiniMaxH3TurboLoRA",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "lora_name": "minimax_h3_turbo_v4_step600_ema.safetensors",
+        "strength": 1.0,
+        "low_vram": false
+      },
+      "_meta": {
+        "title": "Turbo v4"
+      }
+    },
+    "3": {
+      "class_type": "CLIPLoader",
+      "inputs": {
+        "clip_name": "qwen3vl_32b_minimax_h3_bf16.safetensors",
+        "type": "minimax",
+        "device": "default"
+      }
+    },
+    "4": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+      }
+    },
+    "5": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
+    },
+    "6": {
+      "class_type": "MiniMaxH3HybridRefAndKeyframe",
+      "inputs": {
+        "clip": [
+          "3",
+          0
+        ],
+        "vae": [
+          "4",
+          0
+        ],
+        "audio_vae": [
+          "5",
+          0
+        ],
+        "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] Paste one validated Prompt Studio segment here.\n\noverall_soundscape: Replace with the generated native-audio plan.\n\nnon_diegetic_music: N/A",
+        "width": 768,
+        "height": 1344,
+        "length": 175,
+        "ref_image_size": "match",
+        "also_ref_first_frame": false,
+        "first_frame": [
+          "20",
+          0
+        ]
+      },
+      "_meta": {
+        "title": "Prompt Studio Hybrid Conditioning"
+      }
+    },
+    "7": {
+      "class_type": "RandomNoise",
+      "inputs": {
+        "noise_seed": 1
+      }
+    },
+    "8": {
+      "class_type": "BasicScheduler",
+      "inputs": {
+        "model": [
+          "2",
+          0
+        ],
+        "scheduler": "simple",
+        "steps": 8,
+        "denoise": 1.0
+      }
+    },
+    "9": {
+      "class_type": "MiniMaxH3TurboSampler",
+      "inputs": {}
+    },
+    "10": {
+      "class_type": "BasicGuider",
+      "inputs": {
+        "model": [
+          "2",
+          0
+        ],
+        "conditioning": [
+          "6",
+          0
+        ]
+      }
+    },
+    "11": {
+      "class_type": "SamplerCustomAdvanced",
+      "inputs": {
+        "noise": [
+          "7",
+          0
+        ],
+        "guider": [
+          "10",
+          0
+        ],
+        "sampler": [
+          "9",
+          0
+        ],
+        "sigmas": [
+          "8",
+          0
+        ],
+        "latent_image": [
+          "6",
+          1
+        ]
+      }
+    },
+    "12": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": [
+          "11",
+          0
+        ],
+        "vae": [
+          "4",
+          0
+        ]
+      }
+    },
+    "13": {
+      "class_type": "VAEDecodeAudio",
+      "inputs": {
+        "samples": [
+          "11",
+          0
+        ],
+        "vae": [
+          "5",
+          0
+        ]
+      }
+    },
+    "14": {
+      "class_type": "TrimAudioDuration",
+      "inputs": {
+        "audio": [
+          "13",
+          0
+        ],
+        "start_index": 0.041666666666666664,
+        "duration": 7.0
+      },
+      "_meta": {
+        "title": "Frame-aligned native audio"
+      }
+    },
+    "20": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "H3Idea2Video/template/handoff/tail_native.png"
+      },
+      "_meta": {
+        "title": "Previous native tail / initial frame"
+      }
+    },
+    "21": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "12",
+          0
+        ],
+        "batch_index": 1,
+        "length": 14
+      },
+      "_meta": {
+        "title": "Selected model frames run 1"
+      }
+    },
+    "22": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "12",
+          0
+        ],
+        "batch_index": 16,
+        "length": 28
+      },
+      "_meta": {
+        "title": "Selected model frames run 2"
+      }
+    },
+    "23": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "12",
+          0
+        ],
+        "batch_index": 45,
+        "length": 28
+      },
+      "_meta": {
+        "title": "Selected model frames run 3"
+      }
+    },
+    "24": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "12",
+          0
+        ],
+        "batch_index": 74,
+        "length": 28
+      },
+      "_meta": {
+        "title": "Selected model frames run 4"
+      }
+    },
+    "25": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "12",
+          0
+        ],
+        "batch_index": 103,
+        "length": 28
+      },
+      "_meta": {
+        "title": "Selected model frames run 5"
+      }
+    },
+    "26": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "12",
+          0
+        ],
+        "batch_index": 132,
+        "length": 28
+      },
+      "_meta": {
+        "title": "Selected model frames run 6"
+      }
+    },
+    "27": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "12",
+          0
+        ],
+        "batch_index": 161,
+        "length": 14
+      },
+      "_meta": {
+        "title": "Selected model frames run 7"
+      }
+    },
+    "28": {
+      "class_type": "ImageBatch",
+      "inputs": {
+        "image1": [
+          "21",
+          0
+        ],
+        "image2": [
+          "22",
+          0
+        ]
+      },
+      "_meta": {
+        "title": "Join selected frames"
+      }
+    },
+    "29": {
+      "class_type": "ImageBatch",
+      "inputs": {
+        "image1": [
+          "28",
+          0
+        ],
+        "image2": [
+          "23",
+          0
+        ]
+      },
+      "_meta": {
+        "title": "Join selected frames"
+      }
+    },
+    "30": {
+      "class_type": "ImageBatch",
+      "inputs": {
+        "image1": [
+          "29",
+          0
+        ],
+        "image2": [
+          "24",
+          0
+        ]
+      },
+      "_meta": {
+        "title": "Join selected frames"
+      }
+    },
+    "31": {
+      "class_type": "ImageBatch",
+      "inputs": {
+        "image1": [
+          "30",
+          0
+        ],
+        "image2": [
+          "25",
+          0
+        ]
+      },
+      "_meta": {
+        "title": "Join selected frames"
+      }
+    },
+    "32": {
+      "class_type": "ImageBatch",
+      "inputs": {
+        "image1": [
+          "31",
+          0
+        ],
+        "image2": [
+          "26",
+          0
+        ]
+      },
+      "_meta": {
+        "title": "Join selected frames"
+      }
+    },
+    "33": {
+      "class_type": "ImageBatch",
+      "inputs": {
+        "image1": [
+          "32",
+          0
+        ],
+        "image2": [
+          "27",
+          0
+        ]
+      },
+      "_meta": {
+        "title": "Join selected frames"
+      }
+    },
+    "34": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "12",
+          0
+        ],
+        "batch_index": 174,
+        "length": 1
+      },
+      "_meta": {
+        "title": "Native endpoint for next segment"
+      }
+    },
+    "35": {
+      "class_type": "H3Idea2VideoProjectImageSave",
+      "inputs": {
+        "images": [
+          "34",
+          0
+        ],
+        "project_root": "$IDEA2VIDEO_PROJECT_ROOT",
+        "relative_path": "template/segments/0002/attempt_1/tail_native.png"
+      },
+      "_meta": {
+        "title": "Save lossless native tail directly to project"
+      }
+    },
+    "36": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "33",
+          0
+        ],
+        "batch_index": 42,
+        "length": 1
+      },
+      "_meta": {
+        "title": "Identity/QC sample output frame 42"
+      }
+    },
+    "37": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "33",
+          0
+        ],
+        "batch_index": 84,
+        "length": 1
+      },
+      "_meta": {
+        "title": "Identity/QC sample output frame 84"
+      }
+    },
+    "38": {
+      "class_type": "ImageFromBatch",
+      "inputs": {
+        "image": [
+          "33",
+          0
+        ],
+        "batch_index": 126,
+        "length": 1
+      },
+      "_meta": {
+        "title": "Identity/QC sample output frame 126"
+      }
+    },
+    "39": {
+      "class_type": "ImageBatch",
+      "inputs": {
+        "image1": [
+          "36",
+          0
+        ],
+        "image2": [
+          "37",
+          0
+        ]
+      },
+      "_meta": {
+        "title": "Join identity/QC samples"
+      }
+    },
+    "40": {
+      "class_type": "ImageBatch",
+      "inputs": {
+        "image1": [
+          "39",
+          0
+        ],
+        "image2": [
+          "38",
+          0
+        ]
+      },
+      "_meta": {
+        "title": "Join identity/QC samples"
+      }
+    },
+    "41": {
+      "class_type": "H3Idea2VideoProjectImageSave",
+      "inputs": {
+        "images": [
+          "40",
+          0
+        ],
+        "project_root": "$IDEA2VIDEO_PROJECT_ROOT",
+        "relative_path": "template/segments/0002/attempt_1/qc_sample.png"
+      },
+      "_meta": {
+        "title": "Save native QC samples directly to project"
+      }
+    },
+    "42": {
+      "class_type": "CreateVideo",
+      "inputs": {
+        "images": [
+          "33",
+          0
+        ],
+        "audio": [
+          "14",
+          0
+        ],
+        "fps": 24,
+        "bit_depth": 10
+      }
+    },
+    "43": {
+      "class_type": "H3Idea2VideoProjectVideoSave",
+      "inputs": {
+        "video": [
+          "42",
+          0
+        ],
+        "project_root": "$IDEA2VIDEO_PROJECT_ROOT",
+        "relative_path": "template/segments/0002/attempt_1/native_768x1344.mp4",
+        "crf": 18.0
+      },
+      "_meta": {
+        "title": "Save native diagnostic segment directly to project"
+      }
+    },
+    "44": {
+      "class_type": "UpscaleModelLoader",
+      "inputs": {
+        "model_name": "RealESRGAN_x2plus.pth"
+      }
+    },
+    "45": {
+      "class_type": "ImageUpscaleWithModel",
+      "inputs": {
+        "upscale_model": [
+          "44",
+          0
+        ],
+        "image": [
+          "33",
+          0
+        ]
+      }
+    },
+    "46": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": [
+          "45",
+          0
+        ],
+        "upscale_method": "lanczos",
+        "width": 1080,
+        "height": 1920,
+        "crop": "center"
+      }
+    },
+    "47": {
+      "class_type": "CreateVideo",
+      "inputs": {
+        "images": [
+          "46",
+          0
+        ],
+        "audio": [
+          "14",
+          0
+        ],
+        "fps": 24,
+        "bit_depth": 10
+      }
+    },
+    "48": {
+      "class_type": "H3Idea2VideoProjectVideoSave",
+      "inputs": {
+        "video": [
+          "47",
+          0
+        ],
+        "project_root": "$IDEA2VIDEO_PROJECT_ROOT",
+        "relative_path": "template/segments/0002/attempt_1/final_1080x1920.mp4",
+        "crf": 18.0
+      },
+      "_meta": {
+        "title": "Save accepted-resolution segment directly to project"
+      }
+    }
+  },
+  "meta": {
+    "schema": "h3-prompt-studio-long-api-v1",
+    "run_id": "template",
+    "segment_index": 2,
+    "attempt": 1,
+    "boundary_before": "continuous",
+    "fps": 24,
+    "output_frames": 168,
+    "duration_seconds": 7.0,
+    "model_frames": 175,
+    "selected_indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174
+    ],
+    "tail_source_index": 174,
+    "project_root": "$IDEA2VIDEO_PROJECT_ROOT",
+    "artifact_directory": "runs/template/segments/0002/attempt_1",
+    "has_first_frame": true,
+    "has_last_frame": false,
+    "output_nodes": {
+      "tail": "35",
+      "qc_samples": "41",
+      "native_video": "43",
+      "final_video": "48"
+    },
+    "models": {
+      "diffusion": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "lora": "minimax_h3_turbo_v4_step600_ema.safetensors",
+      "steps": 8,
+      "native_resolution": [
+        768,
+        1344
+      ],
+      "final_resolution": [
+        1080,
+        1920
+      ],
+      "video_codec": "h264",
+      "crf": 18
+    }
+  }
+}

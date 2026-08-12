@@ -1,0 +1,1344 @@
+{
+  "id": "c9b8e0a3-3819-45a2-90bc-f19712f0367e",
+  "revision": 0,
+  "last_node_id": 2005,
+  "last_link_id": 27,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [
+        -2300,
+        -900
+      ],
+      "size": [
+        352,
+        96
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "title": "H3 REF2VA MODEL — REQUIRED",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "MiniMax-H3/minimax_h3_ref2va_pruned_bf16.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 1632,
+      "type": "PathchSageAttentionKJ",
+      "pos": [
+        -1900,
+        -900
+      ],
+      "size": [
+        288,
+        96
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-kjnodes",
+        "ver": "05ba05bf52331622bd3395716c505c29aa1fff76",
+        "Node name for S&R": "PathchSageAttentionKJ"
+      },
+      "widgets_values": [
+        "auto",
+        true
+      ]
+    },
+    {
+      "id": 1633,
+      "type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
+      "pos": [
+        -1550,
+        -900
+      ],
+      "size": [
+        352,
+        32
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-kjnodes",
+        "ver": "05ba05bf52331622bd3395716c505c29aa1fff76",
+        "Node name for S&R": "MiniMaxH3MemoryEfficientSageAttentionPatch"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 1634,
+      "type": "SolAttnPatch",
+      "pos": [
+        -1150,
+        -950
+      ],
+      "size": [
+        320,
+        352
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 3
+        },
+        {
+          "name": "tau_profile",
+          "shape": 7,
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "kijai/ComfyUI-SolAttn_triton",
+        "ver": "0e334dc981cfe3b0ed926ee13ad43f64914b7f5b",
+        "Node name for S&R": "SolAttnPatch"
+      },
+      "widgets_values": [
+        1.5,
+        0.2,
+        0.9,
+        4096,
+        true,
+        "exact_kv_and_rows",
+        false,
+        "2d_frame",
+        true,
+        false,
+        false,
+        "33-35, 39-42"
+      ]
+    },
+    {
+      "id": 1635,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -780,
+        -850
+      ],
+      "size": [
+        256,
+        96
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "MiniMax H3/minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
+        0.95
+      ]
+    },
+    {
+      "id": 5,
+      "type": "MiniMaxH3SigmaShift",
+      "pos": [
+        -450,
+        -850
+      ],
+      "size": [
+        320,
+        160
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            6,
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "MiniMaxH3SigmaShift"
+      },
+      "widgets_values": [
+        12,
+        3
+      ]
+    },
+    {
+      "id": 2,
+      "type": "CLIPLoader",
+      "pos": [
+        -2300,
+        -720
+      ],
+      "size": [
+        352,
+        128
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "title": "H3 TEXT ENCODER",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "MiniMax-H3/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "minimax",
+        "default"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "pos": [
+        -2300,
+        -560
+      ],
+      "size": [
+        352,
+        96
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            9,
+            22
+          ]
+        }
+      ],
+      "title": "H3 Video VAE",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "MiniMaw-H3/minimax_h3_video_vae_fp16.safetensors"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "VAELoader",
+      "pos": [
+        -2300,
+        -400
+      ],
+      "size": [
+        352,
+        96
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "title": "H3 Audio VAE",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "MiniMaw-H3/minimax_h3_audio_vae_fp32.safetensors"
+      ]
+    },
+    {
+      "id": 2001,
+      "type": "LoadVideo",
+      "pos": [
+        -2300,
+        0
+      ],
+      "size": [
+        640,
+        480
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "title": "SOURCE — 3Clba guitar performance",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "LoadVideo"
+      },
+      "widgets_values": [
+        "3ClbaJYWVO4_000030.mp4",
+        "image"
+      ]
+    },
+    {
+      "id": 2002,
+      "type": "MiniMaxH3ReferenceVideoPrepare",
+      "pos": [
+        -1550,
+        0
+      ],
+      "size": [
+        420,
+        240
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source_video",
+          "shape": 7,
+          "type": "VIDEO",
+          "link": 11
+        },
+        {
+          "name": "source_frames",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "source_audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "ref_video",
+          "type": "IMAGE",
+          "links": [
+            12
+          ]
+        },
+        {
+          "name": "source_audio",
+          "type": "AUDIO",
+          "links": [
+            13,
+            24
+          ]
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "links": [
+            14
+          ]
+        },
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "0.3.8",
+        "Node name for S&R": "MiniMaxH3ReferenceVideoPrepare"
+      },
+      "widgets_values": [
+        209,
+        24.0
+      ],
+      "title": "24 FPS + EXACT ORIGINAL AUDIO (209 frames)"
+    },
+    {
+      "id": 110,
+      "type": "MiniMaxH3ReferenceToVideo",
+      "pos": [
+        -1000,
+        0
+      ],
+      "size": [
+        650,
+        720
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 8
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 9
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 10
+        },
+        {
+          "label": "ref_image_0",
+          "name": "ref_images.ref_image_0",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "label": "ref_image_1",
+          "name": "ref_images.ref_image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "label": "ref_video_0",
+          "name": "ref_videos.ref_video_0",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 12
+        },
+        {
+          "label": "ref_video_audio_0",
+          "name": "ref_video_audios.ref_video_audio_0",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 13
+        },
+        {
+          "label": "ref_audio_0",
+          "name": "ref_audios.ref_audio_0",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "label": "ref_audio_1",
+          "name": "ref_audios.ref_audio_1",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": null
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": null
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": null
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "widget": {
+            "name": "length"
+          },
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            15
+          ]
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            16
+          ]
+        }
+      ],
+      "title": "REF2VA — SAME PERFORMANCE, THREE NEW ANGLES",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "MiniMaxH3ReferenceToVideo"
+      },
+      "widgets_values": [
+        "subject_definitions:\n<Subject 1> is the adult male guitarist in <Video 1>, with short dark wavy hair, a grey-and-white plaid short-sleeve button-up shirt over a plain white T-shirt, and the same focused downward gaze, facial identity, build, posture, and natural performance mannerisms.\n<Subject 2> is the cream/off-white Telecaster-style electric guitar in <Video 1>, including its black pickguard, maple-colored neck, proportions, hardware, strap position, and relationship to <Subject 1>'s hands and body.\n<Video 1> is the synchronized 8.708-second performance reference. Preserve its exact guitar-playing chronology, fretting, picking, hand positions, body rhythm, and uninterrupted musical timing while re-filming the performance from three new camera angles. The static Tera Echo product card, ProGuitarShop.com watermark, typography, and split-screen graphic layout visible in the source are reference exclusions, not target content.\n<Audio 1> is the soundtrack paired with <Video 1>. It is copied unchanged as the complete final soundtrack and controls every visible picking, fretting, and rhythmic movement.\n\nsummary:\n[reference generation + audio reuse] Re-create <Video 1>'s same continuous electric-guitar performance as a clean cinematic studio video of <Subject 1> and <Subject 2>, using exactly three alternate camera angles and hard cuts while retaining the source action and <Audio 1> timing precisely.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], and [Shot 3]): fully_preserved - retain his exact identity, short dark wavy hair, plaid shirt over white T-shirt, body proportions, focused expression, posture, and all performance mannerisms from <Video 1>.\n<Subject 2> (appears in [Shot 1], [Shot 2], and [Shot 3]): fully_preserved - retain the exact cream Telecaster-style guitar, hardware, scale, hand placement, strap relationship, and continuity from <Video 1>.\n<Video 1>: partially_preserved - fully retain the temporal performance, finger choreography, picking rhythm, poses, and action continuity; replace its original fixed framing, product card, watermark, text, and graphic layout with three clean full-frame camera angles.\n<Audio 1>: fully_preserved - copy the original waveform unchanged from 00:00.000 through 00:08.708 with no regenerated vocals, instruments, effects, padding, or time-stretching.\n\ndetailed_description:\nThe target is a realistic full-frame studio performance against a simple deep-black background. Preserve the understated demo-session lighting and natural skin, shirt, and cream-guitar colors from <Video 1>. There are exactly three shots. Every hard cut changes only the camera viewpoint: the guitarist's action, hand positions, body rhythm, lighting direction, wardrobe, guitar geometry, and audio synchronization remain continuous across each boundary. Do not add any pedal product panel, logo, website watermark, caption, typography, border, split screen, picture-in-picture element, or interface graphic. <Subject 1> does not speak or sing; his mouth remains naturally relaxed while he concentrates on playing.\n\n[Shot 1 | 00:00.000-00:02.917] Begin on a tight left three-quarter medium close-up. Frame <Subject 1>'s face, upper torso, the guitar neck, and his fretting hand with shallow depth of field. He looks down toward the fretboard and performs the exact opening motions from <Video 1>. Use a restrained, nearly static camera with a very slow inward drift; preserve every finger change and pick attack in synchronization with <Audio 1>.\n\n[Shot 2 | 00:02.917-00:05.833] On the musical transient at 00:02.917, hard-cut to a low right-side close angle emphasizing the cream guitar body, bridge, picking hand, and the diagonal line of the neck. Keep part of <Subject 1>'s focused face and plaid shoulder in frame. The ongoing phrase is never restarted: his hands and body arrive in exactly the pose implied by the preceding frame, then continue the source performance without a temporal jump. Add only a subtle lateral camera slide.\n\n[Shot 3 | 00:05.833-00:08.708] On the musical transient at 00:05.833, hard-cut to a clean frontal three-quarter medium shot showing <Subject 1>'s complete upper body, both hands, and nearly the full guitar. Maintain the deep-black studio background and the same lighting. Continue the exact remaining performance from <Video 1> through the final frame, ending naturally on the source pose without a fade, freeze, extra cut, or invented gesture.\n\noverall_soundscape:\n<Audio 1> is copied unchanged and remains perfectly synchronized to the visible guitar performance for the entire 8.708 seconds. Add no dialogue, voice, room tone, foley, audience sound, generated guitar layer, transition effect, or camera noise.\n\nnon_diegetic_music:\nNo new music is generated. The audience hears only the unchanged <Audio 1> waveform paired with the source performance.",
+        960,
+        544,
+        209,
+        "match"
+      ],
+      "color": "#346434",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 121,
+      "type": "BasicGuider",
+      "pos": [
+        -200,
+        0
+      ],
+      "size": [
+        288,
+        96
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 6
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 15
+        }
+      ],
+      "outputs": [
+        {
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "links": [
+            18
+          ]
+        }
+      ],
+      "title": "Loop guider",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "BasicGuider"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 120,
+      "type": "RandomNoise",
+      "pos": [
+        -200,
+        150
+      ],
+      "size": [
+        288,
+        96
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "widget": {
+            "name": "noise_seed"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "NOISE",
+          "type": "NOISE",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "title": "Per-shot noise seed",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "RandomNoise"
+      },
+      "widgets_values": [
+        1001,
+        "randomize"
+      ]
+    },
+    {
+      "id": 122,
+      "type": "KSamplerSelect",
+      "pos": [
+        -200,
+        300
+      ],
+      "size": [
+        288,
+        96
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [
+            19
+          ]
+        }
+      ],
+      "title": "Sampler algorithm",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": [
+        "res_multistep"
+      ]
+    },
+    {
+      "id": 123,
+      "type": "BasicScheduler",
+      "pos": [
+        -200,
+        450
+      ],
+      "size": [
+        288,
+        128
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 7
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "widget": {
+            "name": "steps"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            20
+          ]
+        }
+      ],
+      "title": "Per-shot scheduler steps",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        5,
+        1
+      ]
+    },
+    {
+      "id": 124,
+      "type": "SamplerCustomAdvanced",
+      "pos": [
+        200,
+        0
+      ],
+      "size": [
+        320,
+        320
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 17
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 18
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 19
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 20
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "LATENT",
+          "links": [
+            21
+          ]
+        },
+        {
+          "name": "denoised_output",
+          "type": "LATENT",
+          "links": null
+        }
+      ],
+      "title": "H3 sampler — SINGLE LOOP BODY",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "SamplerCustomAdvanced"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 130,
+      "type": "VAEDecode",
+      "pos": [
+        600,
+        0
+      ],
+      "size": [
+        256,
+        96
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 21
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 22
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            23
+          ]
+        }
+      ],
+      "title": "Decode current clip frames",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 132,
+      "type": "MiniMaxH3LoopTrim",
+      "pos": [
+        900,
+        0
+      ],
+      "size": [
+        384,
+        224
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 23
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 24
+        },
+        {
+          "name": "trim_frames",
+          "type": "INT",
+          "widget": {
+            "name": "trim_frames"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            25
+          ]
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            26
+          ]
+        }
+      ],
+      "title": "COPY SOURCE AUDIO + FRAME LOCK",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "15fc6a7bf7b78efb27f33d7eef3818e7ed0e118a",
+        "Node name for S&R": "MiniMaxH3LoopTrim"
+      },
+      "widgets_values": [
+        0,
+        24,
+        true
+      ],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 2003,
+      "type": "CreateVideo",
+      "pos": [
+        1250,
+        0
+      ],
+      "size": [
+        240,
+        110
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 25
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 26
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "widget": {
+            "name": "fps"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            27
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.5.1",
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [
+        24
+      ],
+      "title": "209 frames @ 24 FPS"
+    },
+    {
+      "id": 2004,
+      "type": "SaveVideo",
+      "pos": [
+        1540,
+        0
+      ],
+      "size": [
+        650,
+        520
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 27
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.5.1"
+      },
+      "widgets_values": [
+        "h3_three_angle_guitar",
+        "auto",
+        "auto"
+      ],
+      "title": "FINAL — ORIGINAL AUDIO, NEW CAMERA ANGLES"
+    },
+    {
+      "id": 2005,
+      "type": "Note",
+      "pos": [
+        -2300,
+        -1380
+      ],
+      "size": [
+        2490,
+        300
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "READ FIRST — EXPERIMENTAL",
+      "properties": {},
+      "widgets_values": [
+        "EXPERIMENTAL — ONE-PASS THREE-ANGLE GUITAR REF2VA\n\nThis workflow re-films the source guitar performance from exactly three camera angles in one H3 pass. It is not a recursive Contex Loop.\n\n• Load Video is preset to 3ClbaJYWVO4_000030.mp4 from ComfyUI/input.\n• Reference Video Prep samples the 30 fps source at H3's 24 fps and selects 209 valid frames (8.708 seconds).\n• The paired source waveform is copied from 00:00.000 to 00:08.708 exactly. It conditions Ref2VA and replaces the generated audio at export.\n• The prompt preserves the performer, clothing, cream guitar, hand choreography, and timing seen in the source, but removes its static pedal card, watermark, and text layout.\n• Change length only to another H3-valid value satisfying length % 17 == 5 and covered by both source picture and source audio. Prep intentionally refuses padding and time-stretching.\n• Select model paths available in your installation before queueing."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      1632,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      1632,
+      0,
+      1633,
+      0,
+      "MODEL"
+    ],
+    [
+      3,
+      1633,
+      0,
+      1634,
+      0,
+      "MODEL"
+    ],
+    [
+      4,
+      1634,
+      0,
+      1635,
+      0,
+      "MODEL"
+    ],
+    [
+      5,
+      1635,
+      0,
+      5,
+      0,
+      "MODEL"
+    ],
+    [
+      6,
+      5,
+      0,
+      121,
+      0,
+      "MODEL"
+    ],
+    [
+      7,
+      5,
+      0,
+      123,
+      0,
+      "MODEL"
+    ],
+    [
+      8,
+      2,
+      0,
+      110,
+      0,
+      "CLIP"
+    ],
+    [
+      9,
+      3,
+      0,
+      110,
+      1,
+      "VAE"
+    ],
+    [
+      10,
+      4,
+      0,
+      110,
+      2,
+      "VAE"
+    ],
+    [
+      11,
+      2001,
+      0,
+      2002,
+      0,
+      "VIDEO"
+    ],
+    [
+      12,
+      2002,
+      0,
+      110,
+      5,
+      "IMAGE"
+    ],
+    [
+      13,
+      2002,
+      1,
+      110,
+      6,
+      "AUDIO"
+    ],
+    [
+      14,
+      2002,
+      2,
+      110,
+      12,
+      "INT"
+    ],
+    [
+      15,
+      110,
+      0,
+      121,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      16,
+      110,
+      1,
+      124,
+      4,
+      "LATENT"
+    ],
+    [
+      17,
+      120,
+      0,
+      124,
+      0,
+      "NOISE"
+    ],
+    [
+      18,
+      121,
+      0,
+      124,
+      1,
+      "GUIDER"
+    ],
+    [
+      19,
+      122,
+      0,
+      124,
+      2,
+      "SAMPLER"
+    ],
+    [
+      20,
+      123,
+      0,
+      124,
+      3,
+      "SIGMAS"
+    ],
+    [
+      21,
+      124,
+      0,
+      130,
+      0,
+      "LATENT"
+    ],
+    [
+      22,
+      3,
+      0,
+      130,
+      1,
+      "VAE"
+    ],
+    [
+      23,
+      130,
+      0,
+      132,
+      0,
+      "IMAGE"
+    ],
+    [
+      24,
+      2002,
+      1,
+      132,
+      1,
+      "AUDIO"
+    ],
+    [
+      25,
+      132,
+      0,
+      2003,
+      0,
+      "IMAGE"
+    ],
+    [
+      26,
+      132,
+      1,
+      2003,
+      1,
+      "AUDIO"
+    ],
+    [
+      27,
+      2003,
+      0,
+      2004,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "EXPERIMENTAL — READ FIRST",
+      "bounding": [
+        -2340,
+        -1420,
+        2570,
+        380
+      ],
+      "color": "#8f6a31",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "REF2VA MODEL STACK",
+      "bounding": [
+        -2340,
+        -1000,
+        2250,
+        760
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "SOURCE PERFORMANCE + THREE-ANGLE PROMPT",
+      "bounding": [
+        -2340,
+        -40,
+        2040,
+        800
+      ],
+      "color": "#8a5a9b",
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "ONE PASS + ORIGINAL-AUDIO EXPORT",
+      "bounding": [
+        -240,
+        -40,
+        2470,
+        650
+      ],
+      "color": "#4d8b64",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.62,
+      "offset": [
+        1600,
+        1050
+      ]
+    },
+    "frontendVersion": "1.48.7",
+    "comfyui_mcp": {
+      "workflow_uuid": "bbe0ab68-f915-49f8-92a0-7aac07619b9f"
+    }
+  },
+  "version": 0.4
+}

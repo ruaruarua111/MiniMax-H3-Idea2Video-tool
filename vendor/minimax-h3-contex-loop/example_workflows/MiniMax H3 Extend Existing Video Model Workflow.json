@@ -1,0 +1,2622 @@
+{
+  "id": "c0b8422a-84d4-44f8-91ce-31c68a9a119e",
+  "revision": 0,
+  "last_node_id": 1924,
+  "last_link_id": 83,
+  "nodes": [
+    {
+      "id": 1633,
+      "type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
+      "pos": [
+        -1312,
+        -928
+      ],
+      "size": [
+        352,
+        32
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-kjnodes",
+        "ver": "05ba05bf52331622bd3395716c505c29aa1fff76",
+        "Node name for S&R": "MiniMaxH3MemoryEfficientSageAttentionPatch"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 1634,
+      "type": "SolAttnPatch",
+      "pos": [
+        -928,
+        -960
+      ],
+      "size": [
+        320,
+        352
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 3
+        },
+        {
+          "name": "tau_profile",
+          "shape": 7,
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "kijai/ComfyUI-SolAttn_triton",
+        "ver": "0e334dc981cfe3b0ed926ee13ad43f64914b7f5b",
+        "Node name for S&R": "SolAttnPatch"
+      },
+      "widgets_values": [
+        1.5,
+        0.2,
+        0.9,
+        4096,
+        true,
+        "exact_kv_and_rows",
+        false,
+        "2d_frame",
+        true,
+        false,
+        false,
+        "33-35, 39-42"
+      ]
+    },
+    {
+      "id": 132,
+      "type": "MiniMaxH3LoopTrim",
+      "pos": [
+        2912,
+        -256
+      ],
+      "size": [
+        384,
+        224
+      ],
+      "flags": {},
+      "order": 36,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 38
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 39
+        },
+        {
+          "name": "trim_frames",
+          "type": "INT",
+          "widget": {
+            "name": "trim_frames"
+          },
+          "link": 40
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            42,
+            47
+          ]
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            44,
+            74
+          ]
+        }
+      ],
+      "title": "Trim overlap + frame-lock audio",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "15fc6a7bf7b78efb27f33d7eef3818e7ed0e118a",
+        "Node name for S&R": "MiniMaxH3LoopTrim"
+      },
+      "widgets_values": [
+        0,
+        24,
+        true
+      ],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1704,
+      "type": "MiniMaxH3ChainSegmentSave",
+      "pos": [
+        3328,
+        -256
+      ],
+      "size": [
+        384,
+        288
+      ],
+      "flags": {},
+      "order": 37,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "state",
+          "type": "H3_CHAIN_STATE",
+          "link": 41
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 42
+        },
+        {
+          "name": "sampled_latent",
+          "type": "LATENT",
+          "link": 43
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 44
+        }
+      ],
+      "outputs": [
+        {
+          "name": "segment",
+          "type": "H3_CHAIN_SEGMENT",
+          "links": [
+            49
+          ]
+        },
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "SAVE SCENE + RESUME CHECKPOINT",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "3a744122ce4cf2a2e611a6f2fd90ac8ec7318070",
+        "Node name for S&R": "MiniMaxH3ChainSegmentSave"
+      },
+      "widgets_values": [],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1705,
+      "type": "MiniMaxH3ChainLoopEnd",
+      "pos": [
+        4384,
+        -256
+      ],
+      "size": [
+        352,
+        320
+      ],
+      "flags": {},
+      "order": 38,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "flow",
+          "type": "H3_CHAIN_FLOW",
+          "link": 45
+        },
+        {
+          "name": "state",
+          "type": "H3_CHAIN_STATE",
+          "link": 46
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 47
+        },
+        {
+          "name": "sampled_latent",
+          "type": "LATENT",
+          "link": 48
+        },
+        {
+          "name": "segment",
+          "type": "H3_CHAIN_SEGMENT",
+          "link": 75
+        }
+      ],
+      "outputs": [
+        {
+          "name": "manifest",
+          "type": "H3_CHAIN_MANIFEST",
+          "links": [
+            50
+          ]
+        },
+        {
+          "name": "manifest_json",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "last_context_frames",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "last_context_latent",
+          "type": "LATENT",
+          "links": null
+        }
+      ],
+      "title": "H3 LOOP END — RECURSE THROUGH SELECTED SCENES",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "3a744122ce4cf2a2e611a6f2fd90ac8ec7318070",
+        "Node name for S&R": "MiniMaxH3ChainLoopEnd"
+      },
+      "widgets_values": [],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1707,
+      "type": "MiniMaxH3ChainManifestLoad",
+      "pos": [
+        4256,
+        576
+      ],
+      "size": [
+        352,
+        224
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "plan",
+          "type": "H3_CHAIN_PLAN",
+          "link": 52
+        },
+        {
+          "name": "external_context",
+          "shape": 7,
+          "type": "H3_CHAIN_EXTERNAL_CONTEXT",
+          "link": 82
+        }
+      ],
+      "outputs": [
+        {
+          "name": "manifest",
+          "type": "H3_CHAIN_MANIFEST",
+          "links": [
+            54
+          ]
+        },
+        {
+          "name": "manifest_json",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "RECOVERY — LOAD SAVED EXTENSION",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "3a744122ce4cf2a2e611a6f2fd90ac8ec7318070",
+        "Node name for S&R": "MiniMaxH3ChainManifestLoad"
+      },
+      "widgets_values": [],
+      "color": "#59451e",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1708,
+      "type": "MiniMaxH3ChainAssemble",
+      "pos": [
+        4672,
+        512
+      ],
+      "size": [
+        448,
+        256
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "manifest",
+          "type": "H3_CHAIN_MANIFEST",
+          "link": 54
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "RECOVERY — ASSEMBLE WITHOUT RENDERING",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "3a744122ce4cf2a2e611a6f2fd90ac8ec7318070",
+        "Node name for S&R": "MiniMaxH3ChainAssemble"
+      },
+      "widgets_values": [
+        "plan",
+        "extended_video_recovered",
+        256
+      ],
+      "color": "#59451e",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1901,
+      "type": "Note",
+      "pos": [
+        4224,
+        800
+      ],
+      "size": [
+        832,
+        320
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "RECOVERY / ASSEMBLE LATER",
+      "properties": {
+        "Node name for S&R": "Note"
+      },
+      "widgets_values": [
+        "The two amber recovery nodes are MUTED by default.\n\nTo recover a completed extension, keep the same plan, run name, model fingerprint, and source video selected. Enable Manifest Load and the recovery Assemble node; the adapter recreates the source-tail fingerprint and the manifest verifies every saved artifact before joining.\n\nTo resume rendering, leave recovery muted and set Loop Start's start_clip to the first unfinished scene."
+      ],
+      "color": "#432f66",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [
+        -2048,
+        -928
+      ],
+      "size": [
+        352,
+        96
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "title": "H3 REF2VA MODEL — REQUIRED",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "MiniMax-H3/minimax_h3_ref2va_pruned_bf16.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "CLIPLoader",
+      "pos": [
+        -2048,
+        -768
+      ],
+      "size": [
+        352,
+        128
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "title": "H3 TEXT ENCODER",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "MiniMax-H3/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "minimax",
+        "default"
+      ]
+    },
+    {
+      "id": 1635,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -576,
+        -864
+      ],
+      "size": [
+        256,
+        96
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "MiniMax H3/minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
+        0.95
+      ]
+    },
+    {
+      "id": 1632,
+      "type": "PathchSageAttentionKJ",
+      "pos": [
+        -1664,
+        -928
+      ],
+      "size": [
+        288,
+        96
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-kjnodes",
+        "ver": "05ba05bf52331622bd3395716c505c29aa1fff76",
+        "Node name for S&R": "PathchSageAttentionKJ"
+      },
+      "widgets_values": [
+        "auto",
+        true
+      ]
+    },
+    {
+      "id": 1701,
+      "type": "MiniMaxH3ChainLoopStart",
+      "pos": [
+        -544,
+        -256
+      ],
+      "size": [
+        352,
+        192
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "plan",
+          "type": "H3_CHAIN_PLAN",
+          "link": 13
+        },
+        {
+          "name": "external_context",
+          "shape": 7,
+          "type": "H3_CHAIN_EXTERNAL_CONTEXT",
+          "link": 81
+        }
+      ],
+      "outputs": [
+        {
+          "name": "flow",
+          "type": "H3_CHAIN_FLOW",
+          "links": [
+            45
+          ]
+        },
+        {
+          "name": "state",
+          "type": "H3_CHAIN_STATE",
+          "links": [
+            15
+          ]
+        },
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "H3 LOOP START — IMPORTED VIDEO CONTEXT",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "3a744122ce4cf2a2e611a6f2fd90ac8ec7318070",
+        "Node name for S&R": "MiniMaxH3ChainLoopStart"
+      },
+      "widgets_values": [
+        1,
+        ""
+      ],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1702,
+      "type": "MiniMaxH3ChainCurrent",
+      "pos": [
+        32,
+        -256
+      ],
+      "size": [
+        480,
+        512
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "state",
+          "type": "H3_CHAIN_STATE",
+          "link": 15
+        }
+      ],
+      "outputs": [
+        {
+          "name": "state",
+          "type": "H3_CHAIN_STATE",
+          "links": [
+            24,
+            41,
+            46,
+            73
+          ]
+        },
+        {
+          "name": "clip_index",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "clip_count",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "shot_id",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            17
+          ]
+        },
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "links": [
+            22
+          ]
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "links": [
+            20
+          ]
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "links": [
+            23
+          ]
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            18
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            19
+          ]
+        },
+        {
+          "name": "audio_start",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "audio_duration",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "source_audio_slice",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "CURRENT EXTENSION SCENE",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "3a744122ce4cf2a2e611a6f2fd90ac8ec7318070",
+        "Node name for S&R": "MiniMaxH3ChainCurrent"
+      },
+      "widgets_values": [],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 110,
+      "type": "MiniMaxH3ReferenceToVideo",
+      "pos": [
+        640,
+        -256
+      ],
+      "size": [
+        544,
+        384
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 8
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 59
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 66
+        },
+        {
+          "label": "ref_image_0",
+          "name": "ref_images.ref_image_0",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "label": "ref_image_1",
+          "name": "ref_images.ref_image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "label": "ref_video_0",
+          "name": "ref_videos.ref_video_0",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "label": "ref_video_audio_0",
+          "name": "ref_video_audios.ref_video_audio_0",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "label": "ref_audio_0",
+          "name": "ref_audios.ref_audio_0",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "label": "ref_audio_1",
+          "name": "ref_audios.ref_audio_1",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 17
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 18
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 19
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "widget": {
+            "name": "length"
+          },
+          "link": 20
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            25
+          ]
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            27,
+            33
+          ]
+        }
+      ],
+      "title": "H3 REF2VA — EMPTY REFERENCES SUPPORTED",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "MiniMaxH3ReferenceToVideo"
+      },
+      "widgets_values": [
+        "integrated_multimodal_description: [Shot 1] Live-action, cinematic, begin inside the incoming video context with no establishing reset. Continue the exact final camera direction and speed from the imported ending. Preserve the principal subject's screen position, identity, body proportions, wardrobe, hair, accessories, pose, expression, contact points, clothing folds, hair movement, and ongoing action across the join. Complete the unfinished movement naturally during the first seconds. The camera then follows the subject forward into the nearest plausible adjoining area already implied by the source ending. Introduce new space through continuous parallax and physically connected geometry, never through a cut, dissolve, teleport, or sudden reframing. Maintain the established lens behavior, frame geometry, lighting direction, color response, motion cadence, anatomy, and environmental scale. End while the subject is still moving and the camera is beginning a gentle arc, leaving both motions visibly unresolved for the next scene.\n\noverall_soundscape:\nContinue the incoming room tone, environmental texture, movement sounds, and acoustic perspective without a sudden change at the join. Keep new footsteps, fabric movement, impacts, and spatial reflections synchronized to the visible action.\n\nnon_diegetic_music:\nIf music is already audible, continue its instrumentation, tempo, key, and dynamic level without a restart; otherwise use no non-diegetic music.",
+        960,
+        544,
+        192,
+        "match"
+      ],
+      "color": "#346434",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1703,
+      "type": "MiniMaxH3ChainContext",
+      "pos": [
+        1312,
+        -256
+      ],
+      "size": [
+        352,
+        288
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "state",
+          "type": "H3_CHAIN_STATE",
+          "link": 24
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 25
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 63
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 27
+        },
+        {
+          "name": "audio_vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": 83
+        }
+      ],
+      "outputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "links": [
+            28
+          ]
+        },
+        {
+          "name": "trim_frames",
+          "type": "INT",
+          "links": [
+            40
+          ]
+        },
+        {
+          "name": "is_continuation",
+          "type": "BOOLEAN",
+          "links": null
+        }
+      ],
+      "title": "CONTEXT — IMPORTED VIDEO / PREVIOUS SCENE",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "3a744122ce4cf2a2e611a6f2fd90ac8ec7318070",
+        "Node name for S&R": "MiniMaxH3ChainContext"
+      },
+      "widgets_values": [],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 123,
+      "type": "BasicScheduler",
+      "pos": [
+        1888,
+        288
+      ],
+      "size": [
+        288,
+        128
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 72
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "widget": {
+            "name": "steps"
+          },
+          "link": 23
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            32
+          ]
+        }
+      ],
+      "title": "Per-shot scheduler steps",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        5,
+        1
+      ]
+    },
+    {
+      "id": 122,
+      "type": "KSamplerSelect",
+      "pos": [
+        1888,
+        128
+      ],
+      "size": [
+        288,
+        96
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [
+            31
+          ]
+        }
+      ],
+      "title": "Sampler algorithm",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": [
+        "res_multistep"
+      ]
+    },
+    {
+      "id": 120,
+      "type": "RandomNoise",
+      "pos": [
+        1888,
+        -64
+      ],
+      "size": [
+        288,
+        96
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "widget": {
+            "name": "noise_seed"
+          },
+          "link": 22
+        }
+      ],
+      "outputs": [
+        {
+          "name": "NOISE",
+          "type": "NOISE",
+          "links": [
+            29
+          ]
+        }
+      ],
+      "title": "Per-shot noise seed",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "RandomNoise"
+      },
+      "widgets_values": [
+        0,
+        "fixed"
+      ]
+    },
+    {
+      "id": 121,
+      "type": "BasicGuider",
+      "pos": [
+        1888,
+        -256
+      ],
+      "size": [
+        288,
+        96
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 71
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 28
+        }
+      ],
+      "outputs": [
+        {
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "links": [
+            30
+          ]
+        }
+      ],
+      "title": "Loop guider",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "BasicGuider"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 124,
+      "type": "SamplerCustomAdvanced",
+      "pos": [
+        2272,
+        -256
+      ],
+      "size": [
+        320,
+        320
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 29
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 30
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 31
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 32
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 33
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "LATENT",
+          "links": [
+            34,
+            36,
+            43,
+            48
+          ]
+        },
+        {
+          "name": "denoised_output",
+          "type": "LATENT",
+          "links": null
+        }
+      ],
+      "title": "H3 sampler — SINGLE LOOP BODY",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "SamplerCustomAdvanced"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 130,
+      "type": "VAEDecode",
+      "pos": [
+        2624,
+        -256
+      ],
+      "size": [
+        256,
+        96
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 34
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 61
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            38
+          ]
+        }
+      ],
+      "title": "Decode current clip frames",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 131,
+      "type": "VAEDecodeAudio",
+      "pos": [
+        2624,
+        -96
+      ],
+      "size": [
+        256,
+        96
+      ],
+      "flags": {},
+      "order": 35,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 36
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 68
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            39
+          ]
+        }
+      ],
+      "title": "Decode current clip audio",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "VAEDecodeAudio"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 1706,
+      "type": "MiniMaxH3ChainAssemble",
+      "pos": [
+        4800,
+        -224
+      ],
+      "size": [
+        608,
+        480
+      ],
+      "flags": {},
+      "order": 39,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "manifest",
+          "type": "H3_CHAIN_MANIFEST",
+          "link": 50
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "ASSEMBLE ORIGINAL + GENERATED EXTENSION",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "3a744122ce4cf2a2e611a6f2fd90ac8ec7318070",
+        "Node name for S&R": "MiniMaxH3ChainAssemble"
+      },
+      "widgets_values": [
+        "plan",
+        "extended_video_final",
+        256
+      ],
+      "color": "#24533a",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "pos": [
+        -2048,
+        -608
+      ],
+      "size": [
+        352,
+        96
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            58
+          ]
+        }
+      ],
+      "title": "H3 Video VAE",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "MiniMaw-H3/minimax_h3_video_vae_fp16.safetensors"
+      ]
+    },
+    {
+      "id": 1915,
+      "type": "Reroute",
+      "pos": [
+        2560,
+        -416
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 64
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "VAE",
+          "links": [
+            61
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 1914,
+      "type": "Reroute",
+      "pos": [
+        512,
+        -416
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 58
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "VAE",
+          "links": [
+            59,
+            62
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 1916,
+      "type": "Reroute",
+      "pos": [
+        1216,
+        -416
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 62
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "VAE",
+          "links": [
+            63,
+            64
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 4,
+      "type": "VAELoader",
+      "pos": [
+        -2048,
+        -480
+      ],
+      "size": [
+        352,
+        96
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            65
+          ]
+        }
+      ],
+      "title": "H3 Audio VAE",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "MiniMaw-H3/minimax_h3_audio_vae_fp32.safetensors"
+      ]
+    },
+    {
+      "id": 1917,
+      "type": "Reroute",
+      "pos": [
+        512,
+        -384
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 65
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "VAE",
+          "links": [
+            66,
+            67
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 1918,
+      "type": "Reroute",
+      "pos": [
+        2560,
+        -384
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 67
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "VAE",
+          "links": [
+            68,
+            83
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 5,
+      "type": "MiniMaxH3SigmaShift",
+      "pos": [
+        -256,
+        -864
+      ],
+      "size": [
+        320,
+        160
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            69
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "MiniMaxH3SigmaShift"
+      },
+      "widgets_values": [
+        12,
+        3
+      ]
+    },
+    {
+      "id": 1919,
+      "type": "Reroute",
+      "pos": [
+        512,
+        -448
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 69
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "MODEL",
+          "links": [
+            70
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 1920,
+      "type": "Reroute",
+      "pos": [
+        1792,
+        -448
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 70
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "MODEL",
+          "links": [
+            71,
+            72
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 1700,
+      "type": "MiniMaxH3ChainPlan",
+      "pos": [
+        -704,
+        480
+      ],
+      "size": [
+        992,
+        1184
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "plan",
+          "type": "H3_CHAIN_PLAN",
+          "links": [
+            13,
+            52,
+            80
+          ]
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "clip_count",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "title": "EXPERIMENTAL — H3 PLAN / EXTEND IMPORTED VIDEO",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "3a744122ce4cf2a2e611a6f2fd90ac8ec7318070",
+        "Node name for S&R": "MiniMaxH3ChainPlan",
+        "h3_chain_scene_colors": {}
+      },
+      "widgets_values": [
+        "{\n  \"defaults\": {\n    \"duration_seconds\": 8,\n    \"steps\": 5\n  },\n  \"shots\": [\n    {\n      \"id\": \"existing_video_extension_01\",\n      \"prompt\": \"integrated_multimodal_description: [Shot 1] Live-action, cinematic, begin inside the incoming video context with no establishing reset. Continue the exact final camera direction and speed from the imported ending. Preserve the principal subject's screen position, identity, body proportions, wardrobe, hair, accessories, pose, expression, contact points, clothing folds, hair movement, and ongoing action across the join. Complete the unfinished movement naturally during the first seconds. The camera then follows the subject forward into the nearest plausible adjoining area already implied by the source ending. Introduce new space through continuous parallax and physically connected geometry, never through a cut, dissolve, teleport, or sudden reframing. Maintain the established lens behavior, frame geometry, lighting direction, color response, motion cadence, anatomy, and environmental scale. End while the subject is still moving and the camera is beginning a gentle arc, leaving both motions visibly unresolved for the next scene.\\n\\noverall_soundscape:\\nContinue the incoming room tone, environmental texture, movement sounds, and acoustic perspective without a sudden change at the join. Keep new footsteps, fabric movement, impacts, and spatial reflections synchronized to the visible action.\\n\\nnon_diegetic_music:\\nIf music is already audible, continue its instrumentation, tempo, key, and dynamic level without a restart; otherwise use no non-diegetic music.\",\n      \"seed\": \"1001\"\n    },\n    {\n      \"id\": \"existing_video_extension_02\",\n      \"prompt\": \"integrated_multimodal_description: [Shot 1] Live-action, cinematic, continue from the incoming frames with the same principal subject already moving and the camera already entering the gentle arc; do not restart either motion. Preserve the exact identity, body proportions, wardrobe, hair, accessories, physical condition, lighting direction, background continuity, surface detail, lens behavior, and spatial scale inherited from the preceding scene. Complete the arc smoothly to reveal the connected environment from a new three-quarter angle. The subject reacts naturally to a visible feature already present in the space, then slows with believable weight while the camera eases from tracking movement into a stable medium-wide composition. Let small secondary motion continue in hair, fabric, reflections, loose objects, and the environment. During the final seconds, resolve the action cleanly and hold a confident composition long enough to read, without freezing the subject or introducing a cut.\\n\\noverall_soundscape:\\nMaintain continuous environmental ambience and synchronized movement sounds, gradually reducing activity as the final composition settles.\\n\\nnon_diegetic_music:\\nIf music was established, let the generated continuation resolve the same instrumentation, tempo, and key with a restrained ending; otherwise use no non-diegetic music.\",\n      \"seed\": \"1002\"\n    }\n  ]\n}",
+        "extend_existing_video_demo",
+        "extend-existing-video-demo-v1",
+        960,
+        544,
+        22,
+        "video",
+        "head",
+        "disabled",
+        "generated_audio",
+        22,
+        8,
+        5,
+        0,
+        20
+      ],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1902,
+      "type": "Note",
+      "pos": [
+        -2112,
+        -1344
+      ],
+      "size": [
+        1248,
+        320
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "CREDITS",
+      "properties": {
+        "Node name for S&R": "Note"
+      },
+      "widgets_values": [
+        "Ref2VA multi-reference and Motion Context compatibility research: seitanism, shared in the Banodoco MiniMax H3 seamless-extension thread.\n\nRecursive GraphBuilder traversal: specialized MiniMax adaptation of Ethanfel's SxCP loop implementation in ComfyUI-Prompt-Builder."
+      ],
+      "color": "#432f66",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1906,
+      "type": "Note",
+      "pos": [
+        -2272,
+        224
+      ],
+      "size": [
+        1536,
+        224
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "EXPERIMENTAL WORKFLOW — READ BEFORE RUNNING",
+      "properties": {},
+      "widgets_values": [
+        "EXPERIMENTAL: this existing-video continuation path is new and needs broader real-world validation. Keep the source file and use a unique run_name.\n\n1. Core Load Video connects its native VIDEO directly to Existing Video Context.\n2. For VHS or another loader, disconnect source_video and use source_frames + optional source_audio; set source_fps to the real decoded-frame rate. Never connect both video routes.\n3. Keep prepend_original enabled to place the complete source before the generated extension. Disable it for extension-only output.\n4. Edit the two scene prompts in H3 Plan and use a unique run_name.\n5. Queue. Every generated scene is saved before Review Gate pauses. Approve, retry the prompt, reroll the seed, or approve and stop.\n6. Generated-audio mode carries the imported audio tail into scene 1. For a silent source, the visual continuation still works."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 1921,
+      "type": "LoadVideo",
+      "pos": [
+        -2080,
+        -256
+      ],
+      "size": [
+        544,
+        448
+      ],
+      "flags": {},
+      "order": 40,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            76,
+            77
+          ]
+        }
+      ],
+      "title": "STEP 1 — LOAD THE VIDEO TO EXTEND",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "LoadVideo"
+      },
+      "widgets_values": [
+        "choose_the_video_to_extend.mp4",
+        "image"
+      ]
+    },
+    {
+      "id": 1922,
+      "type": "GetVideoComponents",
+      "pos": [
+        -1504,
+        -256
+      ],
+      "size": [
+        320,
+        128
+      ],
+      "flags": {},
+      "order": 41,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 76
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "bit_depth",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "title": "ALTERNATIVE — EXPOSE IMAGE / AUDIO / FPS",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "Node name for S&R": "GetVideoComponents"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 1923,
+      "type": "MiniMaxH3ChainExternalVideo",
+      "pos": [
+        -1152,
+        -256
+      ],
+      "size": [
+        416,
+        320
+      ],
+      "flags": {},
+      "order": 42,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "plan",
+          "type": "H3_CHAIN_PLAN",
+          "link": 80
+        },
+        {
+          "name": "source_video",
+          "type": "VIDEO",
+          "link": 77
+        },
+        {
+          "name": "source_frames",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "source_audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "external_context",
+          "type": "H3_CHAIN_EXTERNAL_CONTEXT",
+          "links": [
+            81,
+            82
+          ]
+        },
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "EXPERIMENTAL — BUILD IMPORTED VIDEO CONTEXT",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "0.3.7",
+        "Node name for S&R": "MiniMaxH3ChainExternalVideo"
+      },
+      "widgets_values": [
+        24.0,
+        true
+      ],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 1924,
+      "type": "MiniMaxH3ChainReview",
+      "pos": [
+        3744,
+        -256
+      ],
+      "size": [
+        608,
+        512
+      ],
+      "flags": {},
+      "order": 43,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "state",
+          "type": "H3_CHAIN_STATE",
+          "link": 73
+        },
+        {
+          "name": "segment",
+          "type": "H3_CHAIN_SEGMENT",
+          "link": 49
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 74
+        }
+      ],
+      "outputs": [
+        {
+          "name": "segment",
+          "type": "H3_CHAIN_SEGMENT",
+          "links": [
+            75
+          ]
+        },
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "REVIEW GATE — WATCH WITH SOUND BEFORE CONTINUING",
+      "properties": {
+        "aux_id": "ethanfel/ComfyUI-MiniMaxH3-Contex-Loop",
+        "ver": "0.3.6",
+        "Node name for S&R": "MiniMaxH3ChainReview"
+      },
+      "widgets_values": [
+        true,
+        false,
+        0.0,
+        false,
+        true,
+        "checkpointed"
+      ],
+      "color": "#3f4e2f",
+      "bgcolor": "rgba(24,24,27,.96)"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      1632,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      1632,
+      0,
+      1633,
+      0,
+      "MODEL"
+    ],
+    [
+      3,
+      1633,
+      0,
+      1634,
+      0,
+      "MODEL"
+    ],
+    [
+      4,
+      1634,
+      0,
+      1635,
+      0,
+      "MODEL"
+    ],
+    [
+      5,
+      1635,
+      0,
+      5,
+      0,
+      "MODEL"
+    ],
+    [
+      8,
+      2,
+      0,
+      110,
+      0,
+      "CLIP"
+    ],
+    [
+      13,
+      1700,
+      0,
+      1701,
+      0,
+      "H3_CHAIN_PLAN"
+    ],
+    [
+      15,
+      1701,
+      1,
+      1702,
+      0,
+      "H3_CHAIN_STATE"
+    ],
+    [
+      17,
+      1702,
+      4,
+      110,
+      9,
+      "STRING"
+    ],
+    [
+      18,
+      1702,
+      8,
+      110,
+      10,
+      "INT"
+    ],
+    [
+      19,
+      1702,
+      9,
+      110,
+      11,
+      "INT"
+    ],
+    [
+      20,
+      1702,
+      6,
+      110,
+      12,
+      "INT"
+    ],
+    [
+      22,
+      1702,
+      5,
+      120,
+      0,
+      "INT"
+    ],
+    [
+      23,
+      1702,
+      7,
+      123,
+      1,
+      "INT"
+    ],
+    [
+      24,
+      1702,
+      0,
+      1703,
+      0,
+      "H3_CHAIN_STATE"
+    ],
+    [
+      25,
+      110,
+      0,
+      1703,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      27,
+      110,
+      1,
+      1703,
+      3,
+      "LATENT"
+    ],
+    [
+      28,
+      1703,
+      0,
+      121,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      29,
+      120,
+      0,
+      124,
+      0,
+      "NOISE"
+    ],
+    [
+      30,
+      121,
+      0,
+      124,
+      1,
+      "GUIDER"
+    ],
+    [
+      31,
+      122,
+      0,
+      124,
+      2,
+      "SAMPLER"
+    ],
+    [
+      32,
+      123,
+      0,
+      124,
+      3,
+      "SIGMAS"
+    ],
+    [
+      33,
+      110,
+      1,
+      124,
+      4,
+      "LATENT"
+    ],
+    [
+      34,
+      124,
+      0,
+      130,
+      0,
+      "LATENT"
+    ],
+    [
+      36,
+      124,
+      0,
+      131,
+      0,
+      "LATENT"
+    ],
+    [
+      38,
+      130,
+      0,
+      132,
+      0,
+      "IMAGE"
+    ],
+    [
+      39,
+      131,
+      0,
+      132,
+      1,
+      "AUDIO"
+    ],
+    [
+      40,
+      1703,
+      1,
+      132,
+      2,
+      "INT"
+    ],
+    [
+      41,
+      1702,
+      0,
+      1704,
+      0,
+      "H3_CHAIN_STATE"
+    ],
+    [
+      42,
+      132,
+      0,
+      1704,
+      1,
+      "IMAGE"
+    ],
+    [
+      43,
+      124,
+      0,
+      1704,
+      2,
+      "LATENT"
+    ],
+    [
+      44,
+      132,
+      1,
+      1704,
+      3,
+      "AUDIO"
+    ],
+    [
+      45,
+      1701,
+      0,
+      1705,
+      0,
+      "H3_CHAIN_FLOW"
+    ],
+    [
+      46,
+      1702,
+      0,
+      1705,
+      1,
+      "H3_CHAIN_STATE"
+    ],
+    [
+      47,
+      132,
+      0,
+      1705,
+      2,
+      "IMAGE"
+    ],
+    [
+      48,
+      124,
+      0,
+      1705,
+      3,
+      "LATENT"
+    ],
+    [
+      49,
+      1704,
+      0,
+      1924,
+      1,
+      "H3_CHAIN_SEGMENT"
+    ],
+    [
+      50,
+      1705,
+      0,
+      1706,
+      0,
+      "H3_CHAIN_MANIFEST"
+    ],
+    [
+      52,
+      1700,
+      0,
+      1707,
+      0,
+      "H3_CHAIN_PLAN"
+    ],
+    [
+      54,
+      1707,
+      0,
+      1708,
+      0,
+      "H3_CHAIN_MANIFEST"
+    ],
+    [
+      58,
+      3,
+      0,
+      1914,
+      0,
+      "VAE"
+    ],
+    [
+      59,
+      1914,
+      0,
+      110,
+      1,
+      "VAE"
+    ],
+    [
+      61,
+      1915,
+      0,
+      130,
+      1,
+      "VAE"
+    ],
+    [
+      62,
+      1914,
+      0,
+      1916,
+      0,
+      "VAE"
+    ],
+    [
+      63,
+      1916,
+      0,
+      1703,
+      2,
+      "VAE"
+    ],
+    [
+      64,
+      1916,
+      0,
+      1915,
+      0,
+      "VAE"
+    ],
+    [
+      65,
+      4,
+      0,
+      1917,
+      0,
+      "VAE"
+    ],
+    [
+      66,
+      1917,
+      0,
+      110,
+      2,
+      "VAE"
+    ],
+    [
+      67,
+      1917,
+      0,
+      1918,
+      0,
+      "VAE"
+    ],
+    [
+      68,
+      1918,
+      0,
+      131,
+      1,
+      "VAE"
+    ],
+    [
+      69,
+      5,
+      0,
+      1919,
+      0,
+      "MODEL"
+    ],
+    [
+      70,
+      1919,
+      0,
+      1920,
+      0,
+      "MODEL"
+    ],
+    [
+      71,
+      1920,
+      0,
+      121,
+      0,
+      "MODEL"
+    ],
+    [
+      72,
+      1920,
+      0,
+      123,
+      0,
+      "MODEL"
+    ],
+    [
+      73,
+      1702,
+      0,
+      1924,
+      0,
+      "H3_CHAIN_STATE"
+    ],
+    [
+      74,
+      132,
+      1,
+      1924,
+      2,
+      "AUDIO"
+    ],
+    [
+      75,
+      1924,
+      0,
+      1705,
+      4,
+      "H3_CHAIN_SEGMENT"
+    ],
+    [
+      76,
+      1921,
+      0,
+      1922,
+      0,
+      "VIDEO"
+    ],
+    [
+      77,
+      1921,
+      0,
+      1923,
+      1,
+      "VIDEO"
+    ],
+    [
+      80,
+      1700,
+      0,
+      1923,
+      0,
+      "H3_CHAIN_PLAN"
+    ],
+    [
+      81,
+      1923,
+      0,
+      1701,
+      1,
+      "H3_CHAIN_EXTERNAL_CONTEXT"
+    ],
+    [
+      82,
+      1923,
+      0,
+      1707,
+      1,
+      "H3_CHAIN_EXTERNAL_CONTEXT"
+    ],
+    [
+      83,
+      1918,
+      0,
+      1703,
+      4,
+      "VAE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "MODEL STACK",
+      "bounding": [
+        -2112,
+        -1024,
+        2200,
+        650
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "EXPERIMENTAL — SOURCE VIDEO → IMPORTED CONTEXT",
+      "bounding": [
+        -2144,
+        -352,
+        1456,
+        800
+      ],
+      "color": "#744c8c",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "TIMED H3 EXTENSION LOOP + REVIEW GATE",
+      "bounding": [
+        -704,
+        -352,
+        5072,
+        800
+      ],
+      "color": "#744c8c",
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "PREPEND ORIGINAL + FINAL ASSEMBLY",
+      "bounding": [
+        4768,
+        -320,
+        768,
+        640
+      ],
+      "color": "#2f6b3f",
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "DISABLED RECOVERY PATH",
+      "bounding": [
+        4192,
+        416,
+        928,
+        700
+      ],
+      "color": "#8a5a2b",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.43,
+      "offset": [
+        3300.0,
+        1440.0
+      ]
+    },
+    "frontendVersion": "1.48.7",
+    "VHS_latentpreview": true,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true,
+    "ue_links": [],
+    "links_added_by_ue": [],
+    "comfyui_mcp": {
+      "workflow_uuid": "e7f5bd65-8f2d-40c9-ab82-ddc28e3aa7ed"
+    }
+  },
+  "version": 0.4
+}

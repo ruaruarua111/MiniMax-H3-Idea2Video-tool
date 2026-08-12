@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="460" viewBox="0 0 1400 460" role="img" aria-labelledby="title desc">
+  <title id="title">MiniMax H3 Contex Loop</title>
+  <desc id="desc">A luminous video and audio ribbon loops through scene checkpoints.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070a18"/>
+      <stop offset="0.58" stop-color="#10102d"/>
+      <stop offset="1" stop-color="#071c2b"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="78%" cy="48%" r="48%">
+      <stop offset="0" stop-color="#4b47ff" stop-opacity=".28"/>
+      <stop offset=".55" stop-color="#19cde4" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#070a18" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ribbon" x1="760" y1="100" x2="1340" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9b6cff"/>
+      <stop offset=".48" stop-color="#4b47ff"/>
+      <stop offset="1" stop-color="#38d6e8"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="66" y1="0" x2="360" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9b6cff"/>
+      <stop offset="1" stop-color="#38d6e8"/>
+    </linearGradient>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#b8c3ff" opacity=".12"/>
+    </pattern>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="11" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="round"><rect width="1400" height="460" rx="28"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#round)">
+    <rect width="1400" height="460" fill="url(#bg)"/>
+    <rect width="1400" height="460" fill="url(#halo)"/>
+    <rect width="1400" height="460" fill="url(#grid)"/>
+    <path d="M0 398C230 350 386 466 620 405S1040 335 1400 405V460H0Z" fill="#050713" opacity=".62"/>
+
+    <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif">
+      <text x="70" y="82" fill="#7ce9f3" font-size="18" font-weight="700" letter-spacing="4.2">COMFYUI × MINIMAX H3</text>
+      <rect x="70" y="105" width="250" height="4" rx="2" fill="url(#accent)"/>
+      <text x="66" y="196" fill="#f7f8ff" font-size="66" font-weight="760" letter-spacing="-2">Contex Loop</text>
+      <text x="70" y="242" fill="#b7bdd9" font-size="24" font-weight="450">Scene plans that survive the render.</text>
+      <text x="70" y="278" fill="#7e88ae" font-size="18">Seamless motion + audio · review · checkpoint · resume</text>
+
+      <g font-size="14" font-weight="700" letter-spacing="1.2">
+        <g transform="translate(70 320)">
+          <rect width="92" height="38" rx="19" fill="#161a39" stroke="#4b47ff" stroke-opacity=".8"/>
+          <text x="46" y="25" fill="#d9d7ff" text-anchor="middle">LOOP</text>
+        </g>
+        <g transform="translate(174 320)">
+          <rect width="108" height="38" rx="19" fill="#161a39" stroke="#8060f7" stroke-opacity=".8"/>
+          <text x="54" y="25" fill="#e5ddff" text-anchor="middle">REVIEW</text>
+        </g>
+        <g transform="translate(294 320)">
+          <rect width="154" height="38" rx="19" fill="#111d35" stroke="#38d6e8" stroke-opacity=".72"/>
+          <text x="77" y="25" fill="#c5f8fc" text-anchor="middle">CHECKPOINT</text>
+        </g>
+        <g transform="translate(460 320)">
+          <rect width="110" height="38" rx="19" fill="#111d35" stroke="#38d6e8" stroke-opacity=".72"/>
+          <text x="55" y="25" fill="#c5f8fc" text-anchor="middle">RESUME</text>
+        </g>
+      </g>
+    </g>
+
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M748 232C827 92 944 92 1030 232S1230 372 1322 232C1230 92 1116 92 1030 232S827 372 748 232Z" stroke="#182453" stroke-width="42" opacity=".8"/>
+      <path d="M748 232C827 92 944 92 1030 232S1230 372 1322 232C1230 92 1116 92 1030 232S827 372 748 232Z" stroke="url(#ribbon)" stroke-width="22" opacity=".95" filter="url(#glow)"/>
+      <path d="M748 232C827 92 944 92 1030 232S1230 372 1322 232C1230 92 1116 92 1030 232S827 372 748 232Z" stroke="#d8fbff" stroke-width="3" opacity=".72"/>
+      <path d="M765 231C832 148 907 146 973 216S1101 317 1170 258S1271 162 1307 222" stroke="#ffffff" stroke-width="2" stroke-dasharray="3 13" opacity=".5"/>
+      <path d="M786 273l10-15 10 25 10-45 10 34 10-18 10 8 10-25 10 38 10-16 10 8 10-22 10 32 10-12" stroke="#ff74cf" stroke-width="2.5" opacity=".72" filter="url(#soft)"/>
+    </g>
+
+    <g filter="url(#soft)">
+      <circle cx="795" cy="167" r="8" fill="#9b6cff"/><circle cx="795" cy="167" r="3" fill="#fff" opacity=".8"/>
+      <circle cx="1030" cy="232" r="10" fill="#4b47ff"/><circle cx="1030" cy="232" r="4" fill="#fff" opacity=".86"/>
+      <circle cx="1267" cy="151" r="8" fill="#38d6e8"/><circle cx="1267" cy="151" r="3" fill="#fff" opacity=".8"/>
+      <circle cx="1278" cy="318" r="7" fill="#ff6b7d"/><circle cx="1278" cy="318" r="2.5" fill="#fff" opacity=".8"/>
+    </g>
+
+    <g transform="translate(782 377)" font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+      <path d="M42 20H458" stroke="#3e4f7c" stroke-width="2"/>
+      <g transform="translate(0)"><rect width="112" height="40" rx="10" fill="#11172f" stroke="#7d66ff"/><circle cx="20" cy="20" r="5" fill="#9b6cff"/><text x="34" y="25" fill="#d8dcf3" font-size="13">SCENE 01</text></g>
+      <g transform="translate(152)"><rect width="112" height="40" rx="10" fill="#11172f" stroke="#4b8cff"/><circle cx="20" cy="20" r="5" fill="#538cff"/><text x="34" y="25" fill="#d8dcf3" font-size="13">SCENE 02</text></g>
+      <g transform="translate(304)"><rect width="112" height="40" rx="10" fill="#11172f" stroke="#38d6e8"/><circle cx="20" cy="20" r="5" fill="#38d6e8"/><text x="34" y="25" fill="#d8dcf3" font-size="13">SCENE 03</text></g>
+      <circle cx="448" cy="20" r="17" fill="#153048" stroke="#38d6e8"/><path d="M440 20l6 6 11-13" fill="none" stroke="#93f4fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+</svg>

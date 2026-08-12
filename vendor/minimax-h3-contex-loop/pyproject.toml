@@ -1,0 +1,41 @@
+[project]
+name = "comfyui-minimaxh3-contex-loop"
+description = "Recursive, checkpointed MiniMax H3 scene loops with motion/audio context, audiovisual review, resume, and final assembly for ComfyUI."
+version = "0.3.20"
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "NikoDemon80", email = "262659861+NikoDemon80@users.noreply.github.com" },
+    { name = "Ethanfel", email = "28683423+ethanfel@users.noreply.github.com" },
+]
+keywords = [
+    "comfyui",
+    "minimax-h3",
+    "video-generation",
+    "audio",
+    "loop",
+    "checkpoint",
+    "resume",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Sound/Audio",
+]
+
+[project.urls]
+Homepage = "https://github.com/ethanfel/ComfyUI-MiniMaxH3-Contex-Loop"
+Repository = "https://github.com/ethanfel/ComfyUI-MiniMaxH3-Contex-Loop"
+Issues = "https://github.com/ethanfel/ComfyUI-MiniMaxH3-Contex-Loop/issues"
+Upstream = "https://github.com/NikoDemon80/ComfyUI-H3-Motion-Context"
+
+[tool.comfy]
+PublisherId = "ethanfel"
+DisplayName = "MiniMax H3 Contex Loop"

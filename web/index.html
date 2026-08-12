@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>MiniMax H3 Idea2Video</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">LOCAL · TEXT / IMAGE TO H3</p>
+      <h1>MiniMax H3 Idea2Video</h1>
+      <p class="subtitle">LM Studio 本地 Qwen 负责剧本、看图与官方 H3 格式编译</p>
+    </div>
+    <div class="provider-card" aria-label="模型状态">
+      <span id="providerDot" class="status-dot"></span>
+      <div>
+        <strong>Qwen3.6 27B · LM Studio</strong>
+        <span id="providerStatus">正在检查本地模型会话…</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="studio-tabs" aria-label="工作台模式">
+    <button id="shortTabBtn" class="studio-tab active" type="button" aria-selected="true">单段提示词</button>
+    <button id="longTabBtn" class="studio-tab" type="button" aria-selected="false">长视频项目</button>
+    <button id="contextTabBtn" class="studio-tab" type="button" aria-selected="false">规则工作流</button>
+  </nav>
+
+  <section id="lmSessionPanel" class="lm-session-panel neutral" aria-live="polite">
+    <div>
+      <p class="eyebrow">LOCAL MODEL SESSION</p>
+      <strong id="lmSessionSummary">正在检查 LM Studio…</strong>
+      <span id="lmSessionDetail">固定实例 h3-script-editor · 131,072 上下文 · 无空闲自动卸载</span>
+    </div>
+    <div class="button-group">
+      <button id="lmSessionStartBtn" class="button secondary" type="button">进入编辑模式 / 加载模型</button>
+      <button id="lmSessionPauseBtn" class="button ghost" type="button">暂时退出并释放显存</button>
+    </div>
+  </section>
+
+  <details id="endpointSettingsPanel" class="endpoint-settings">
+    <summary>
+      <span>本地服务设置</span>
+      <span id="endpointSettingsSummary">正在读取 config.json…</span>
+    </summary>
+    <div class="endpoint-settings-body">
+      <div class="endpoint-port-grid">
+        <div>
+          <label for="studioPortInput">Idea2Video 端口</label>
+          <input id="studioPortInput" type="number" min="1" max="65535" step="1" inputmode="numeric">
+        </div>
+        <div>
+          <label for="lmstudioPortInput">LM Studio API 端口</label>
+          <input id="lmstudioPortInput" type="number" min="1" max="65535" step="1" inputmode="numeric">
+        </div>
+        <div>
+          <label for="comfyuiPortInput">ComfyUI API 端口</label>
+          <input id="comfyuiPortInput" type="number" min="1" max="65535" step="1" inputmode="numeric">
+        </div>
+      </div>
+      <label class="endpoint-auto-start" for="lmstudioAutoStartInput">
+        <input id="lmstudioAutoStartInput" type="checkbox" checked>
+        <span>需要 AI 且目标端口未运行时，自动执行 <code>lms server start --port &lt;配置端口&gt; --bind 127.0.0.1</code></span>
+      </label>
+      <div class="endpoint-settings-actions">
+        <p id="endpointSettingsStatus">仅允许本机 127.0.0.1；三个端口不能重复。设置保存在 config.json，不写入 localStorage。</p>
+        <button id="saveEndpointSettingsBtn" class="button secondary" type="button" disabled>保存设置</button>
+      </div>
+    </div>
+  </details>
+
+  <main id="shortWorkspace" class="workspace">
+    <aside class="control-panel">
+      <section class="panel-section sticky-intro">
+        <div class="section-heading">
+          <div>
+            <span class="step-number">01</span>
+            <h2>项目设置</h2>
+          </div>
+          <span id="studioPortPill" class="pill">本机端口读取中</span>
+        </div>
+
+        <label for="mode">生成模式</label>
+        <select id="mode" data-persist>
+          <option value="T2VA">T2VA · 纯文字</option>
+          <option value="I2VA">I2VA · 指定首帧</option>
+          <option value="FL2VA">FL2VA · 指定首尾帧</option>
+        </select>
+
+        <div class="grid-two">
+          <div>
+            <label for="duration">视频时长（秒）</label>
+            <input id="duration" type="number" min="4" max="15" step="any" value="7" data-persist>
+          </div>
+          <div>
+            <label for="aspectRatio">画面比例</label>
+            <select id="aspectRatio" data-persist>
+              <option value="9:16">9:16 竖屏</option>
+              <option value="16:9">16:9 横屏</option>
+              <option value="1:1">1:1 方形</option>
+              <option value="4:3">4:3</option>
+              <option value="3:4">3:4</option>
+              <option value="21:9">21:9 宽银幕</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fixed-settings">
+          <span>本地 Qwen3.6 27B</span>
+          <span>128K 上下文</span>
+          <span>思考 On</span>
+          <span>严格 JSON 校验</span>
+          <span>流式</span>
+          <span>不限制输出 tokens</span>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <div class="section-heading compact">
+          <div><span class="step-number">02</span><h2>创意输入</h2></div>
+        </div>
+        <p class="section-note">通常只填写“创意概述”就可以；本区至少填写一项，其余细节均为选填，留空时由 Qwen 根据创意合理补全。</p>
+
+        <label for="creativeBrief">创意概述 <span class="field-flag recommended">建议填写</span></label>
+        <textarea id="creativeBrief" rows="5" data-persist placeholder="例如：一支 7 秒的产品短片，先建立空间，再展示关键动作，最后落到品牌信息。"></textarea>
+
+        <label for="visualStyle">视觉风格 <span class="field-flag">选填</span></label>
+        <textarea id="visualStyle" rows="2" data-persist placeholder="写实电影、3D CG、二维动画、复古胶片等"></textarea>
+
+        <label for="subjects">人物 / 主体描述 <span class="field-flag">选填</span></label>
+        <textarea id="subjects" rows="3" data-persist placeholder="主体外观、服装、物体、稳定特征与位置关系"></textarea>
+
+        <label for="sceneLighting">场景与光线 <span class="field-flag">选填</span></label>
+        <textarea id="sceneLighting" rows="3" data-persist placeholder="空间、时间、天气、布光、色彩和前后景"></textarea>
+
+        <label for="actionTimeline">动作和时间线 <span class="field-flag">选填</span></label>
+        <textarea id="actionTimeline" rows="4" data-persist placeholder="按时间描述动作起点、发展和结果"></textarea>
+
+        <label for="cameraMotion">镜头运动 <span class="field-flag">选填</span></label>
+        <textarea id="cameraMotion" rows="2" data-persist placeholder="推、拉、摇、移、跟拍、静止及速度幅度"></textarea>
+
+        <label for="exactDialogue">精确对白 <span class="field-flag">选填</span></label>
+        <textarea id="exactDialogue" rows="3" data-persist placeholder="每行一条需要逐字保留的对白；只写真正说出口的原文"></textarea>
+        <p class="field-help">最终会写成 &lt;d&gt;[Language] 原始对白&lt;/d&gt;，不会翻译或润色。</p>
+
+        <label for="visibleText">画面可见文字 <span class="field-flag">选填</span></label>
+        <textarea id="visibleText" rows="2" data-persist placeholder="每行一条招牌、字幕、标签等必须原样显示的文字"></textarea>
+
+        <label for="ambientSound">环境音 / 动作音 <span class="field-flag">选填</span></label>
+        <textarea id="ambientSound" rows="2" data-persist placeholder="环境底噪、脚步、碰撞、衣料、呼吸等"></textarea>
+
+        <label for="music">非画内配乐 <span class="field-flag">选填</span></label>
+        <textarea id="music" rows="2" data-persist placeholder="乐器、速度、节奏、强弱变化；没有则写无"></textarea>
+
+        <label for="extraConstraints">额外约束 <span class="field-flag">选填</span></label>
+        <textarea id="extraConstraints" rows="3" data-persist placeholder="禁止事项、连续性、节奏、内容边界等"></textarea>
+      </section>
+
+      <section id="pictureSection" class="panel-section picture-section" hidden>
+        <div class="section-heading compact">
+          <div><span class="step-number">03</span><h2>参考图转文字</h2></div>
+          <span class="pill accent">只发给本机 Qwen</span>
+        </div>
+        <p class="section-note">直接浏览选择 PNG/JPEG/WebP。长项目中的图片会按 SHA-256 保存到该项目的 <code>runs\&lt;项目 ID&gt;\assets</code>；分析时只发给本机 LM Studio，渲染时再通过 8188 API 上传给 ComfyUI。</p>
+
+        <div class="picture-card">
+          <div class="picture-upload">
+            <img id="picture1Preview" alt="Picture 1 预览" hidden>
+            <label class="file-button" for="picture1File">选择 Picture 1</label>
+            <input id="picture1File" type="file" accept="image/png,image/jpeg,image/webp">
+            <span id="picture1Name">未选择文件</span>
+          </div>
+          <label for="picture1Description">Picture 1 视觉描述 <span class="field-flag conditional">I2VA/FL2VA 编译必需</span></label>
+          <textarea id="picture1Description" rows="5" data-persist placeholder="可由 Qwen 分析后填入，也可手工描述首帧"></textarea>
+        </div>
+
+        <div id="picture2Card" class="picture-card" hidden>
+          <div class="picture-upload">
+            <img id="picture2Preview" alt="Picture 2 预览" hidden>
+            <label class="file-button" for="picture2File">选择 Picture 2</label>
+            <input id="picture2File" type="file" accept="image/png,image/jpeg,image/webp">
+            <span id="picture2Name">未选择文件</span>
+          </div>
+          <label for="picture2Description">Picture 2 视觉描述 <span class="field-flag conditional">FL2VA 编译必需</span></label>
+          <textarea id="picture2Description" rows="5" data-persist placeholder="仅 FL2VA：描述最终必须到达的尾帧"></textarea>
+        </div>
+
+        <button id="analyzeImagesBtn" class="button secondary full" type="button">
+          <span>分析参考图</span><small>Qwen Vision</small>
+        </button>
+      </section>
+    </aside>
+
+    <section class="work-panel">
+      <section class="hero-card">
+        <div>
+          <p class="eyebrow">TWO-STAGE CREATIVE WORKFLOW</p>
+          <h2>先写剧本，再编译 H3</h2>
+          <p>剧本是中文可编辑分镜；最终提示词严格使用 MiniMax 官方基础三字段格式。</p>
+        </div>
+        <button id="generateScriptBtn" class="button primary" type="button">
+          <span>生成分镜剧本</span><small>Stage 1</small>
+        </button>
+      </section>
+
+      <section class="output-section">
+        <div class="output-heading">
+          <div>
+            <span class="step-number">04</span>
+            <h2>可编辑时间轴分镜</h2>
+          </div>
+          <span id="scriptBadge" class="pill muted">尚未生成</span>
+        </div>
+        <div id="scriptMeta" class="script-meta" hidden></div>
+        <div id="shotEditor" class="shot-editor empty-state">
+          <div class="empty-icon">⌁</div>
+          <p>填写左侧创意后生成剧本。生成结果会在这里变成可编辑镜头卡片。</p>
+        </div>
+      </section>
+
+      <section class="stream-section">
+        <div class="output-heading slim">
+          <h2>实时输出</h2>
+          <span id="streamStatus" class="stream-status">空闲</span>
+        </div>
+        <pre id="streamOutput" aria-live="polite">等待任务…</pre>
+      </section>
+
+      <div class="compile-row">
+        <div>
+          <strong>确认剧本与 Picture 描述后编译</strong>
+          <span>最终结果还会经过本地严格校验</span>
+        </div>
+        <button id="compileBtn" class="button primary" type="button" disabled>
+          <span>编译 H3 提示词</span><small>Stage 2</small>
+        </button>
+      </div>
+
+      <section class="output-section prompt-result">
+        <div class="output-heading">
+          <div>
+            <span class="step-number">05</span>
+            <h2>MiniMax H3 最终提示词</h2>
+          </div>
+          <div class="button-group">
+            <button id="copyBtn" class="button ghost" type="button" disabled>复制</button>
+            <button id="downloadBtn" class="button ghost" type="button" disabled>下载 TXT</button>
+          </div>
+        </div>
+        <textarea id="promptOutput" rows="18" spellcheck="false" placeholder="通过校验的 H3 提示词会显示在这里"></textarea>
+      </section>
+
+      <section class="results-grid">
+        <div class="result-card">
+          <h3>验证结果</h3>
+          <div id="validationResult" class="result-body neutral">尚未编译。</div>
+        </div>
+        <div class="result-card">
+          <h3>Warnings</h3>
+          <div id="warningsResult" class="result-body neutral">暂无。</div>
+        </div>
+        <div class="result-card usage-card">
+          <h3>Token 用量 / 缓存</h3>
+          <div id="usageResult" class="result-body neutral">尚无调用记录。</div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <main id="longWorkspace" class="long-workspace" hidden>
+    <section class="long-create-card">
+      <div class="long-title-row">
+        <div>
+          <p class="eyebrow">FRAME-EXACT · UNATTENDED CHAIN</p>
+          <h2>Idea → 约 5 秒剧情卡片 → 单段工作台 → 连续生成</h2>
+          <p>先调整整组中文剧情，再选择每一段使用下方完整单段工作台生成 H3 提示词。</p>
+        </div>
+        <div id="comfyStatus" class="comfy-status neutral">尚未检查 ComfyUI</div>
+      </div>
+
+      <div class="long-form-grid">
+        <div class="long-form-main">
+          <label for="longIdea">长视频 Idea <span class="field-flag recommended">必填</span></label>
+          <textarea id="longIdea" rows="6" data-long-persist placeholder="写完整故事想法即可；Qwen 会先建立故事圣经，再逐段生成。"></textarea>
+
+          <div class="grid-two">
+            <div>
+              <label for="longTargetSeconds">目标总时长（秒） <span class="field-flag">选填</span></label>
+              <input id="longTargetSeconds" type="number" min="5" step="0.01" data-long-persist placeholder="留空由 Qwen 建议">
+            </div>
+            <div>
+              <label>输出规格</label>
+              <div class="readonly-setting">9:16 · 768×1344 → 1080×1920 · 24fps</div>
+            </div>
+          </div>
+
+          <label for="longVisualStyle">视觉风格 <span class="field-flag">选填</span></label>
+          <textarea id="longVisualStyle" rows="2" data-long-persist></textarea>
+          <label for="longCharacters">人物与固定设定 <span class="field-flag">选填</span></label>
+          <textarea id="longCharacters" rows="3" data-long-persist></textarea>
+          <label for="longExactDialogue">必须原样保留的对白 <span class="field-flag">选填</span></label>
+          <textarea id="longExactDialogue" rows="3" data-long-persist placeholder="每行只写一条真正说出口的原文；不得翻译或润色"></textarea>
+          <label for="longMusic">声音与配乐方向 <span class="field-flag">选填</span></label>
+          <textarea id="longMusic" rows="2" data-long-persist></textarea>
+          <label for="longConstraints">额外约束 <span class="field-flag">选填</span></label>
+          <textarea id="longConstraints" rows="3" data-long-persist></textarea>
+        </div>
+
+        <div class="long-form-side">
+          <div class="readonly-setting">本地模型：Qwen3.6 27B Uncensored · LM Studio</div>
+          <p class="field-help">无需 API Key。开始创作时加载项目专属实例；确认全部提示词完成后再显式释放显存。</p>
+
+          <p class="field-help">Picture 1/2 不在这里选择；生成剧情后，选中具体段落并使用下方原有单段图片控件。</p>
+
+          <label class="long-auto-compile" for="longAutoCompile">
+            <input id="longAutoCompile" type="checkbox" data-long-persist checked>
+            <span>长剧本完成后，自动继续生成全部 H3 完整提示词</span>
+          </label>
+          <p class="field-help">默认开启；只继续调用 Qwen，不启动 GPU。若想先人工修改剧情卡片，请取消勾选。</p>
+
+          <button id="createLongProjectBtn" class="button primary full" type="button">
+            <span>生成完整长剧本</span><small>可自动继续编译 H3，不启动 GPU</small>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="long-project-toolbar">
+      <div>
+        <label for="longProjectSelect">已保存项目</label>
+        <select id="longProjectSelect"><option value="">暂无项目</option></select>
+      </div>
+      <button id="refreshLongProjectsBtn" class="button ghost" type="button">刷新项目</button>
+      <button id="checkComfyBtn" class="button ghost" type="button">检查 ComfyUI</button>
+      <button id="generateAllLongPromptsBtn" class="button secondary" type="button" disabled>
+        <span>第 2 步：生成全部 H3 完整提示词</span><small>不启动 GPU</small>
+      </button>
+      <button id="enterAuthoringBtn" class="button ghost" type="button">加载本地模型</button>
+      <button id="pauseAuthoringBtn" class="button ghost" type="button">暂时退出 / 释放显存</button>
+      <button id="confirmAuthoringBtn" class="button secondary" type="button" disabled>
+        <span>确认剧本与全部 H3 完成</span><small>保存指纹并释放显存</small>
+      </button>
+      <div class="toolbar-spacer"></div>
+      <button id="stopLongTaskBtn" class="button ghost" type="button" disabled>当前段完成后暂停</button>
+      <button id="startLongRenderBtn" class="button primary" type="button" disabled>
+        <span>开始连续生成</span><small>自动逐段 GPU</small>
+      </button>
+    </section>
+
+    <section id="longTaskPanel" class="long-task-panel neutral">
+      <div>
+        <strong id="longTaskTitle">尚无后台任务</strong>
+        <span id="longTaskMessage">先生成或载入一个项目。</span>
+      </div>
+      <div class="long-progress"><span id="longProgressBar"></span></div>
+      <pre id="longLiveOutput">等待任务…</pre>
+    </section>
+
+    <section id="longProjectSummary" class="long-summary" hidden>
+      <div class="summary-header">
+        <div>
+          <p class="eyebrow">LONG PROJECT</p>
+          <h2 id="longProjectTitle">未命名</h2>
+          <p id="longProjectMeta"></p>
+        </div>
+        <div class="revision-tools">
+          <select id="longRevisionSelect"><option value="">Revision</option></select>
+          <button id="restoreRevisionBtn" class="button ghost" type="button">恢复版本</button>
+        </div>
+      </div>
+      <div id="longWarnings" class="long-warnings" hidden></div>
+      <div id="longReadiness" class="long-readiness" hidden></div>
+      <section id="longDeliverables" class="long-deliverables">
+        <div class="long-deliverables-heading">
+          <div>
+            <p class="eyebrow">COMPLETE OUTPUT</p>
+            <h2>完整剧本与 H3 提示词</h2>
+            <p id="longDeliverablesStatus">剧本生成后会显示在这里。</p>
+          </div>
+          <div class="long-deliverables-actions">
+            <button id="copyLongStoryBtn" class="button ghost" type="button" disabled>复制完整剧本</button>
+            <button id="copyAllLongPromptsBtn" class="button ghost" type="button" disabled>复制全部 H3 提示词</button>
+            <button id="downloadAllLongPromptsBtn" class="button ghost" type="button" disabled>下载全部 TXT</button>
+          </div>
+        </div>
+        <details class="long-complete-story" open>
+          <summary>查看完整长剧本</summary>
+          <pre id="longFullStoryOutput"></pre>
+        </details>
+        <div id="longPromptOutputs" class="long-prompt-outputs"></div>
+      </section>
+      <div id="longSegments" class="long-segments"></div>
+      <section id="longSingleStage" class="long-single-stage" hidden>
+        <div class="long-single-heading">
+          <div>
+            <p class="eyebrow">SELECTED STORY CARD</p>
+            <h2 id="longSelectedSegmentTitle">请选择一个剧情段</h2>
+            <p id="longSelectedSegmentHint">所选剧情会载入下面同一个单段工作台。</p>
+          </div>
+          <div class="long-save-controls">
+            <span id="longSaveStatus" class="long-save-status neutral">尚未绑定段落</span>
+            <button id="saveLongWorkspaceBtn" class="button ghost" type="button">本地校验并保存当前工作区</button>
+          </div>
+        </div>
+        <div id="longSingleHost"></div>
+      </section>
+    </section>
+  </main>
+
+  <main id="contextWorkspace" class="long-workspace context-workspace" hidden>
+    <section class="long-create-card context-intro-card">
+      <div class="long-title-row">
+        <div>
+          <p class="eyebrow">ADVANCED · CHECKPOINTED · UNATTENDED</p>
+          <h2>已保存长项目 → 规则工作流 → H3 精确尾帧循环</h2>
+          <p>这是原有长项目的只读执行视图。它逐字复用各段已经保存并校验的 H3 完整提示词，只由本地规则组装一个循环工作流；不会生成第二份剧本或提示词，也不会替换原有功能。</p>
+        </div>
+        <div id="contextPluginStatus" class="comfy-status neutral">正在检查本地插件状态…</div>
+      </div>
+
+      <div class="context-notice">
+        <strong>源项目是唯一内容来源。</strong>
+        <span>“生成规则工作流”是零 API、离线 JSON 编译，不接触 ComfyUI；缺少同步状态或有效 H3 提示词会直接阻断。只有“开始无人值守生成”才会等待 ComfyUI 空闲并排队。</span>
+      </div>
+
+      <div class="context-setup-grid">
+        <div>
+          <label for="contextProjectSelect">长剧本项目</label>
+          <select id="contextProjectSelect"><option value="">请选择已保存项目</option></select>
+
+          <div class="grid-two">
+            <div>
+              <label for="contextBaseSeed">基础 Seed <span class="field-flag">选填</span></label>
+              <input id="contextBaseSeed" type="number" min="0" step="1" placeholder="留空则安全随机">
+            </div>
+            <div>
+              <label for="contextGenerateFrom">GPU 恢复起点</label>
+              <select id="contextGenerateFrom"><option value="1">第 1 段</option></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="context-locked-profile">
+          <h3>程序锁定的生产配置</h3>
+          <div class="fixed-settings">
+            <span>Turbo v4 · 8 steps</span>
+            <span>768×1344 · 24fps</span>
+            <span>精确上一段尾帧 → first_frame</span>
+            <span>项目精确帧数</span>
+            <span>Generated audio</span>
+            <span>H.264 · CRF 18</span>
+          </div>
+          <p>节点 ID、顺序、模型、LoRA、分辨率、帧重映射和编码参数均由本地代码生成并校验；此页不调用 Qwen，也没有可编辑的第二份内容。</p>
+        </div>
+      </div>
+
+      <div class="context-actions">
+        <button id="contextRefreshBtn" class="button ghost" type="button">刷新项目</button>
+        <button id="contextGenerateBtn" class="button primary" type="button" disabled>
+          <span>生成规则工作流</span><small>零 API，不启动 GPU</small>
+        </button>
+      </div>
+    </section>
+
+    <section id="contextTaskPanel" class="long-task-panel neutral">
+      <div>
+        <strong id="contextTaskTitle">尚无规则任务</strong>
+        <span id="contextTaskMessage">先选择一个长剧本项目。</span>
+      </div>
+      <div class="long-progress"><span id="contextProgressBar"></span></div>
+      <pre id="contextLiveOutput">等待任务…</pre>
+    </section>
+
+    <section id="contextPlanPanel" class="long-summary" hidden>
+      <div class="summary-header">
+        <div>
+          <p class="eyebrow">RULE WORKFLOW SPEC V2</p>
+          <h2 id="contextPlanTitle">只读规则计划</h2>
+          <p id="contextPlanMeta"></p>
+        </div>
+        <div class="long-deliverables-actions">
+          <button id="contextCopyAllBtn" class="button ghost" type="button">复制全部提示词</button>
+          <a id="contextDownloadSpec" class="button ghost" href="#">下载 Spec JSON</a>
+          <a id="contextDownloadPlan" class="button ghost" href="#">下载插件 Plan</a>
+          <a id="contextDownloadWorkflow" class="button ghost" href="#">下载可导入 Workflow</a>
+          <a id="contextDownloadApi" class="button ghost" href="#">下载 API Prompt</a>
+        </div>
+      </div>
+      <div id="contextWarnings" class="long-warnings" hidden></div>
+      <div id="contextScenePrompts" class="context-scene-prompts"></div>
+
+      <details class="context-raw-editor">
+        <summary>查看只读派生 JSON</summary>
+        <p>这里仅用于审计。要修改内容，请回到长剧本页；保存并同步后重新生成规则工作流。</p>
+        <textarea id="contextRawJson" rows="28" spellcheck="false" readonly></textarea>
+        <div class="context-actions">
+          <button id="contextFormatJsonBtn" class="button ghost" type="button">格式化显示</button>
+          <button id="contextSaveJsonBtn" class="button secondary" type="button" disabled>只读，不能保存</button>
+        </div>
+      </details>
+
+      <section class="context-render-card">
+        <div>
+          <h3>无人值守连续生成</h3>
+          <p>每段先均匀重映射到项目的精确交付帧数并保留 H3 原生末端；该最终原生尾帧作为下一段 Picture 1。FL2VA 还会把已保存的 Picture 2 明确设为最终交付帧。每段视频、音频和 checkpoint 会立即保存，可从失败段继续。</p>
+        </div>
+        <label class="long-auto-compile" for="contextUpscale1080">
+          <input id="contextUpscale1080" type="checkbox">
+          <span>原生总片完成后，再逐段 RealESRGAN 到 1080×1920 并合片</span>
+        </label>
+        <div class="grid-two">
+          <div>
+            <label for="contextRenderFrom">GPU 从第几段开始 / 恢复</label>
+            <select id="contextRenderFrom"><option value="1">第 1 段</option></select>
+          </div>
+          <div class="context-output-paths" id="contextOutputPaths">尚未生成视频。</div>
+        </div>
+        <div class="context-actions">
+          <button id="contextStopBtn" class="button ghost" type="button" disabled>在下一次提交前暂停</button>
+          <button id="contextRenderBtn" class="button primary" type="button" disabled>
+            <span>开始无人值守生成</span><small>这一步会排队 GPU</small>
+          </button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <span>单段页只编译提示词；标准长视频与规则工作流都只有明确点击生成视频后才会排队 GPU。</span>
+    <span>工作台绝不清空或中断其他 ComfyUI 队列；请勿并行运行多个重型视频项目。</span>
+  </footer>
+
+  <dialog id="regenerateDialog" class="regenerate-dialog">
+    <form method="dialog">
+      <div class="dialog-heading">
+        <div><p class="eyebrow">DOWNSTREAM BRANCH</p><h2 id="regenerateTitle">重生成后续剧本</h2></div>
+        <button class="dialog-close" value="cancel" aria-label="关闭">×</button>
+      </div>
+      <p>逐段选择“保留”或“重写”。手动段默认保留，AI 段默认重写。</p>
+      <div id="regenerateChoices" class="regenerate-choices"></div>
+      <div class="regenerate-policy">
+        <label><input type="radio" name="durationPolicy" value="fixed" checked> 保持原段数与总帧数</label>
+        <label><input type="radio" name="durationPolicy" value="replan"> 允许重新规划段数</label>
+        <label for="regenerateCount">新总段数（重新规划时选填）</label>
+        <input id="regenerateCount" type="number" min="2" step="1">
+      </div>
+      <div class="dialog-actions">
+        <button class="button ghost" value="cancel">取消</button>
+        <button id="confirmRegenerateBtn" class="button primary" value="default" type="button">生成候选后段</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

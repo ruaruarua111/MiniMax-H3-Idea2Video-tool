@@ -1,0 +1,12 @@
+{
+  "provider": "lmstudio",
+  "studio_port": 8794,
+  "lmstudio_port": 1234,
+  "lmstudio_auto_start": true,
+  "comfyui_port": 8188,
+  "model": "qwen3.6-27b-uncensored-hauhaucs-aggressive",
+  "identifier": "h3-script-editor",
+  "context_length": 131072,
+  "reasoning": "on",
+  "stream": true
+}
