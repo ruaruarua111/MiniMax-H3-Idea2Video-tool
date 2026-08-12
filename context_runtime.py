@@ -27,6 +27,7 @@ from longform import LongFormError, LongProjectStore, utc_now
 from longform_runtime import (
     BackgroundTask,
     ComfyClient,
+    _comfy_combo_choices,
     _project_artifact_receipt,
     _provider_error,
     assemble_master_video,
@@ -136,10 +137,11 @@ class ContextComfyClient(ComfyClient):
             )
         if upscale:
             try:
-                choices = info["UpscaleModelLoader"]["input"]["required"]["model_name"][0]
+                descriptor = info["UpscaleModelLoader"]["input"]["required"]["model_name"]
             except (KeyError, IndexError, TypeError):
-                choices = []
-            if isinstance(choices, list) and "RealESRGAN_x2plus.pth" not in choices:
+                descriptor = None
+            choices = _comfy_combo_choices(descriptor)
+            if choices is None or "RealESRGAN_x2plus.pth" not in choices:
                 raise LongFormError(
                     "ComfyUI 未找到 RealESRGAN_x2plus.pth；请安装模型或关闭 1080p 后处理。",
                     "context_upscale_model_missing",

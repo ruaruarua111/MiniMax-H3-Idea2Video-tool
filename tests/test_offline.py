@@ -2314,6 +2314,26 @@ class ComfyClientPreflightTests(unittest.TestCase):
         self.assertEqual(missing.exception.code, "comfy_models_missing")
         self.assertIn("minimax_h3_fl2va_pruned_int8_convrot.safetensors", missing.exception.message)
 
+    def test_preflight_accepts_comfy_030_combo_model_options(self) -> None:
+        client = longform_runtime.ComfyClient()
+        info = self.object_info_fixture()
+        info["UpscaleModelLoader"]["input"]["required"]["model_name"] = [
+            "COMBO",
+            {
+                "multiselect": False,
+                "options": [build_long_workflow.UPSCALE_MODEL],
+            },
+        ]
+        self.assertTrue(client.preflight(info=info)["ok"])
+
+        info["UpscaleModelLoader"]["input"]["required"]["model_name"][1][
+            "options"
+        ] = ["other.pth"]
+        with self.assertRaises(longform.LongFormError) as missing:
+            client.preflight(info=info)
+        self.assertEqual(missing.exception.code, "comfy_models_missing")
+        self.assertIn(build_long_workflow.UPSCALE_MODEL, missing.exception.message)
+
     def test_comfy_http_error_keeps_status_and_server_message(self) -> None:
         def rejected(_request, timeout):
             del timeout

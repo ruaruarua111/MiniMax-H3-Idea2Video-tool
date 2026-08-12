@@ -258,6 +258,25 @@ def ensure_media_backend() -> None:
         ) from exc
 
 
+def _comfy_combo_choices(descriptor: Any) -> tuple[Any, ...] | None:
+    """Return options from both legacy and ComfyUI 0.30 COMBO schemas."""
+
+    if not isinstance(descriptor, (list, tuple)) or not descriptor:
+        return None
+    legacy_choices = descriptor[0]
+    if isinstance(legacy_choices, (list, tuple)):
+        return tuple(legacy_choices)
+    if (
+        legacy_choices == "COMBO"
+        and len(descriptor) > 1
+        and isinstance(descriptor[1], dict)
+    ):
+        options = descriptor[1].get("options")
+        if isinstance(options, (list, tuple)):
+            return tuple(options)
+    return None
+
+
 class ComfyClient:
     """Small standard-library client that never clears or interrupts the queue."""
 
@@ -509,13 +528,14 @@ class ComfyClient:
             if not require_upscale and node_name == "UpscaleModelLoader":
                 continue
             try:
-                choices = info[node_name]["input"]["required"][input_name][0]
+                descriptor = info[node_name]["input"]["required"][input_name]
             except (KeyError, IndexError, TypeError) as exc:
                 raise LongFormError(
                     f"ComfyUI 节点 {node_name}.{input_name} 的 object_info 无效。",
                     "comfy_response_invalid",
                 ) from exc
-            if not isinstance(choices, (list, tuple)):
+            choices = _comfy_combo_choices(descriptor)
+            if choices is None:
                 raise LongFormError(
                     f"ComfyUI 节点 {node_name}.{input_name} 未返回模型选项。",
                     "comfy_response_invalid",
